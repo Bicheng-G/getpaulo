@@ -1,6 +1,8 @@
-# Paulo Privacy Policy Draft
-
-Last updated: 2026-07-30
+---
+title: Privacy Policy
+description: Paulo stores everything on your own device. No accounts, no server, no analytics, no tracking, and no network requests of any kind.
+lastUpdated: 2026-07-30
+---
 
 Paulo is a child-first, parent-assisted app that helps a family practice delayed gratification
 together: a child captures wishes as photo stickers, works toward them through a shared family

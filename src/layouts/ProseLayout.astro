@@ -5,9 +5,11 @@ interface Props {
   title: string;
   description: string;
   lede?: string;
+  /** Small line under the title, e.g. "Last updated 30 July 2026". */
+  meta?: string;
 }
 
-const { title, description, lede } = Astro.props;
+const { title, description, lede, meta } = Astro.props;
 ---
 
 <BaseLayout title={title} description={description}>
@@ -17,6 +19,7 @@ const { title, description, lede } = Astro.props;
         {title}
       </h1>
       {lede && <p class="mt-4 text-lg leading-relaxed text-ink-soft">{lede}</p>}
+      {meta && <p class="mt-3 text-sm text-ink-faint">{meta}</p>}
     </header>
 
     <div

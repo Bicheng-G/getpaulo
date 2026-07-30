@@ -1,16 +1,22 @@
-import { defineCollection } from 'astro:content';
+import { defineCollection, z } from 'astro:content';
 import { glob } from 'astro/loaders';
 
 /**
- * The privacy policy is rendered directly from `docs/release/privacy-policy.md`,
- * the same file the App Store submission references. One source of truth: the
- * published page cannot drift from the reviewed document.
+ * Public-facing legal copy. These files are the published source of truth —
+ * `docs/` is internal and is not part of the repository, so nothing the site
+ * needs at build time may live there.
  *
- * The pattern is deliberately narrow — `docs/release/` also holds the internal
- * runbook and readiness checklist, which are not public.
+ * When the policy changes, edit the markdown here and bump `lastUpdated`. The
+ * App Store submission points at the rendered page, so this file and the
+ * disclosures in App Store Connect have to move together.
  */
 const legal = defineCollection({
-  loader: glob({ pattern: 'privacy-policy.md', base: './docs/release' }),
+  loader: glob({ pattern: '*.md', base: './src/content/legal' }),
+  schema: z.object({
+    title: z.string(),
+    description: z.string(),
+    lastUpdated: z.coerce.date(),
+  }),
 });
 
 export const collections = { legal };

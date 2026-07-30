@@ -3,9 +3,14 @@
 The website for **Paulo** — an iPhone app for families with children aged 4–8, a practice layer
 for parent–child co-regulation around delayed gratification.
 
-This repo holds both the product documentation (`docs/`) and the website that publishes parts of
-it. The site's first job is compliance: `/privacy` and `/support` must resolve before the App Store
+The site's first job is compliance: `/privacy` and `/support` must resolve before the App Store
 submission, because Apple checks them during review.
+
+> **`docs/` is internal and is not in this repository.** The design system, strategy notes, and
+> release runbooks live there locally but are git-ignored. Comments throughout this codebase cite
+> those files (`docs/design/system.md#colour-tokens` and similar) because they remain the authority
+> for anyone who has them — they just aren't published here. **Nothing the site needs at build time
+> may live in `docs/`**, or the Netlify build will fail on a clean checkout.
 
 ## Stack
 
@@ -13,7 +18,7 @@ submission, because Apple checks them during review.
 |---|---|
 | Framework | [Astro](https://astro.build) — static output, **zero JavaScript shipped** |
 | Styling | Tailwind v4, tokens ported from `docs/design/system.md` |
-| Content | Astro content collections, reading `docs/release/*.md` directly |
+| Content | Astro content collections (`src/content/`) |
 | Hosting | Netlify, auto-deploying from `main` |
 | Analytics | None. No cookies, no trackers, no third-party requests. |
 
@@ -35,11 +40,11 @@ Then open http://localhost:4321.
 
 ## How this repo is wired
 
-**The privacy policy is not duplicated.** `/privacy` renders
-[`docs/release/privacy-policy.md`](docs/release/privacy-policy.md) — the same file the App Store
-submission references. Edit the doc; the page follows. A remark plugin
-(`src/lib/remark-strip-first-h1.mjs`) drops the source H1 so the internal "Draft" title never
-reaches a page Apple reads.
+**The privacy policy is site-owned content.**
+[`src/content/legal/privacy-policy.md`](src/content/legal/privacy-policy.md) is the published source
+of truth, rendered at `/privacy`. It moved out of the internal `docs/release/` tree precisely
+because the build depends on it. When it changes, bump `lastUpdated` in its frontmatter — the page
+shows that date — and update the App Store Connect disclosures in the same pass.
 
 **Design tokens are a port, not an invention.** `src/styles/global.css` mirrors
 `docs/design/system.md#colour-tokens`, which in turn mirrors `PauloTheme.swift`. If a token changes
@@ -68,10 +73,14 @@ Pull requests get deploy previews automatically.
 
 ## Before submitting to the App Store
 
-- [ ] **Point `getpaulo.app` at Netlify and confirm HTTPS works.** Apex domains need an ALIAS/ANAME
-      record, or move nameservers to Netlify DNS. Do this early — certificate provisioning is
-      usually quick but not instant, and Apple checks that both URLs resolve.
-- [ ] Verify `https://getpaulo.app/privacy` and `https://getpaulo.app/support` load publicly.
+- [ ] **Connect this repo to a Netlify site and publish a deploy.** DNS already points at Netlify
+      (apex A records to Netlify's load balancer, `www` CNAME to `getpaulo.netlify.app`, via
+      Cloudflare nameservers, DNS-only).
+- [ ] **Add `getpaulo.app` as a custom domain on the Netlify site so a certificate is issued.**
+      Until that happens the apex serves Netlify's default `*.netlify.app` certificate, which is
+      invalid for this hostname — browsers refuse the connection outright.
+- [ ] Verify `https://getpaulo.app/privacy` and `https://getpaulo.app/support` load publicly in a
+      browser, not just that DNS resolves. Apple checks these during review.
 - [ ] Set `APP_STORE_ID` in `src/config.ts` once the app record exists. That switches the hero CTA
       from "Coming to the App Store" to a real link and enables the iOS Smart App Banner.
 - [ ] Re-read `/privacy` against the shipping build. If sync, analytics, accounts, or crash
