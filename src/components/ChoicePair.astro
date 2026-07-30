@@ -1,0 +1,74 @@
+---
+/**
+ * The choice pair, as specified in docs/design/principles.md#choice-symmetry and
+ * docs/design/system.md#colour-tokens.
+ *
+ * The contract this component must not break:
+ *   - Equivalent perceived lightness, chroma, contrast and visual mass. Same
+ *     geometry, same shadow strength, same type sizes on both cards.
+ *   - No amber before the choice. Amber reports an earned ledger; it may never
+ *     make one option louder as a control (system.md#amber-usage). That includes
+ *     the "+N★" price badge — the app still ships one on its sideways card pair
+ *     and it is logged as a violation in TODOS.md. Do not reproduce it here.
+ *   - No pre-selection, no recommendation, no ordering that implies a winner.
+ *
+ * Press feedback mirrors the app: ~6pt travel, fast compression on touch-down
+ * (~70ms), slower spring back (~220ms) — motion that explains causality, not
+ * motion for its own sake (system.md#motion). Reduce Motion neutralises the
+ * transition globally in global.css.
+ */
+const choices = [
+  {
+    kind: 'now',
+    label: 'Play now',
+    caption: 'One go on the claw machine, right now.',
+    surface: 'var(--color-choice-now-surface)',
+    edge: 'var(--color-choice-now-edge)',
+    accent: 'var(--color-choice-now)',
+  },
+  {
+    kind: 'wish',
+    label: 'Save for wish',
+    caption: 'Keep going toward the dinosaur.',
+    surface: 'var(--color-choice-wish-surface)',
+    edge: 'var(--color-choice-wish-edge)',
+    accent: 'var(--color-choice-wish)',
+  },
+] as const;
+---
+
+<div class="grid grid-cols-2 gap-4 sm:gap-6" role="group" aria-label="The two choices">
+  {
+    choices.map((choice) => (
+      <div
+        class="choice-card flex flex-col items-center justify-between gap-5 rounded-[28px] px-4 py-8 text-center sm:px-6 sm:py-10"
+        style={`--surface:${choice.surface};--edge:${choice.edge};--accent:${choice.accent}`}
+      >
+        <span
+          class="flex h-14 w-14 items-center justify-center rounded-full sm:h-16 sm:w-16"
+          style="background-color: color-mix(in srgb, var(--accent) 24%, white)"
+          aria-hidden="true"
+        >
+          <span class="h-6 w-6 rounded-full sm:h-7 sm:w-7" style="background-color: var(--accent)" />
+        </span>
+
+        <span class="flex flex-col gap-2">
+          <span class="text-lg font-bold text-ink sm:text-xl">{choice.label}</span>
+          <span class="text-[13px] leading-snug text-ink-soft sm:text-sm">{choice.caption}</span>
+        </span>
+      </div>
+    ))
+  }
+</div>
+
+<style>
+  .choice-card {
+    background-color: var(--surface);
+    /* Matched 3D edge and gradient shadow: identical direction, strength and
+       geometry on both cards; only the semantic colour pair differs. */
+    box-shadow:
+      0 6px 0 var(--edge),
+      0 8px 16px color-mix(in srgb, var(--edge) 55%, transparent);
+    transition: transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+</style>

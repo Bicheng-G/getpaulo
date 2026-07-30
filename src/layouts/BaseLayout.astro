@@ -1,0 +1,128 @@
+---
+import { SITE, APP_STORE_ID } from '../config';
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description: string;
+  /** Set false on pages that supply their own full-bleed background. */
+  dotGrid?: boolean;
+}
+
+const { title, description, dotGrid = true } = Astro.props;
+const fullTitle = title === SITE.name ? `${SITE.name} — ${SITE.tagline}` : `${title} · ${SITE.name}`;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+
+const nav = [
+  { href: '/', label: 'Home' },
+  { href: '/support', label: 'Support' },
+  { href: '/privacy', label: 'Privacy' },
+];
+const path = Astro.url.pathname.replace(/\/$/, '') || '/';
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <meta name="theme-color" content="#F3F1EC" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={SITE.name} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    {/* iOS Safari Smart App Banner — no JavaScript, and it becomes an "Open"
+        button once the app is installed. Only emitted when the app exists. */}
+    {APP_STORE_ID && <meta name="apple-itunes-app" content={`app-id=${APP_STORE_ID}`} />}
+  </head>
+
+  <body class:list={[dotGrid && 'dot-grid', 'min-h-dvh flex flex-col']}>
+    <a
+      href="#main"
+      class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:rounded-full focus:bg-cta focus:px-5 focus:py-3 focus:text-cta-label"
+    >
+      Skip to content
+    </a>
+
+    <header class="mx-auto w-full max-w-5xl px-6 py-6 sm:py-8">
+      <nav class="flex flex-wrap items-center justify-between gap-4" aria-label="Primary">
+        <a href="/" class="group flex items-center gap-2.5" aria-label={`${SITE.name} home`}>
+          <svg
+            width="26"
+            height="26"
+            viewBox="0 0 24 24"
+            fill="none"
+            aria-hidden="true"
+            class="shrink-0"
+          >
+            <path
+              d="M12 2.6l2.6 5.6 6.1.8-4.5 4.2 1.2 6-5.4-3-5.4 3 1.2-6L3.3 9l6.1-.8L12 2.6z"
+              fill="var(--color-star)"
+              stroke="var(--color-star-deep)"
+              stroke-width="1.1"
+              stroke-linejoin="round"></path>
+          </svg>
+          <span class="font-serif text-2xl font-semibold tracking-tight">{SITE.name}</span>
+        </a>
+
+        <ul class="flex items-center gap-1 text-[15px] font-medium">
+          {
+            nav.map((item) => (
+              <li>
+                <a
+                  href={item.href}
+                  aria-current={path === item.href ? 'page' : undefined}
+                  class:list={[
+                    'rounded-full px-3.5 py-2 transition-colors duration-200',
+                    path === item.href
+                      ? 'bg-card text-ink surface-resting'
+                      : 'text-ink-soft hover:text-ink',
+                  ]}
+                >
+                  {item.label}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+    </header>
+
+    <main id="main" class="flex-1">
+      <slot />
+    </main>
+
+    <footer class="mx-auto w-full max-w-5xl px-6 pt-16 pb-12">
+      <div class="border-t border-ink/10 pt-8">
+        <div class="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
+          <div class="max-w-sm">
+            <p class="font-serif text-lg text-ink">{SITE.name}</p>
+            <p class="mt-1.5 text-sm leading-relaxed text-ink-soft">{SITE.tagline}</p>
+          </div>
+
+          <ul class="flex flex-col gap-2 text-sm text-ink-soft">
+            <li><a class="hover:text-ink" href="/support">Support</a></li>
+            <li><a class="hover:text-ink" href="/privacy">Privacy Policy</a></li>
+            <li>
+              <a class="hover:text-ink" href={`mailto:${SITE.supportEmail}`}>
+                {SITE.supportEmail}
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <p class="mt-10 text-[13px] leading-relaxed text-ink-faint">
+          This site uses no cookies, no analytics, and no trackers. Neither does the app.
+        </p>
+      </div>
+    </footer>
+  </body>
+</html>

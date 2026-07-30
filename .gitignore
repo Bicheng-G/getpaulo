@@ -10,6 +10,12 @@ build/
 .next/
 out/
 
+# Astro
+.astro/
+
+# Netlify
+.netlify/
+
 # Env
 .env
 .env.local

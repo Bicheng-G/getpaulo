@@ -1,0 +1,175 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ChoicePair from '../components/ChoicePair.astro';
+import { APP_STORE_URL } from '../config';
+
+const steps = [
+  {
+    n: '1',
+    title: 'Capture a wish',
+    body: 'Photograph the real thing your child wants. Paulo cuts it out into a sticker and suggests a name for it — on the device, without sending the photo anywhere.',
+  },
+  {
+    n: '2',
+    title: 'Agree what a star means',
+    body: 'Together you decide what one star is worth. It is a real family promise, not a generic point, and you write it down where everyone can see it.',
+  },
+  {
+    n: '3',
+    title: 'Meet the moment',
+    body: 'When the moment comes, the phone goes to the child. A short pause to breathe, then two honest choices — and the child picks.',
+  },
+  {
+    n: '4',
+    title: 'See what happened',
+    body: 'Saving adds stars and the wish sticker gains colour. When the promise is kept in real life, the family keeps a card to remember it.',
+  },
+];
+
+const notList = [
+  'A reward chart',
+  'A way to score your child',
+  'A parenting encyclopedia',
+  'Somewhere to spend time',
+];
+---
+
+<BaseLayout
+  title="Paulo"
+  description="Paulo is an iPhone app for families with children aged 4 to 8. A child captures a real wish as a photo sticker, chooses between enjoying something now or saving toward it, and watches a family promise become real. Everything stays on your device."
+>
+  <!-- Hero -->
+  <section class="mx-auto w-full max-w-3xl px-6 pt-10 pb-20 text-center sm:pt-16">
+    <p class="text-sm font-bold tracking-[0.14em] text-ink-soft uppercase">
+      For families with children 4–8
+    </p>
+
+    <h1 class="mt-5 font-serif text-[2.7rem] leading-[1.08] font-semibold sm:text-6xl">
+      Real wishes, real choices,<br class="hidden sm:inline" /> real promises.
+    </h1>
+
+    <p class="mx-auto mt-6 max-w-xl text-lg leading-relaxed text-ink-soft sm:text-xl">
+      Waiting for something you want is hard when you are five. Paulo gives a family the smallest
+      useful bit of help in the moment it is hardest — and then gets out of the way.
+    </p>
+
+    <div class="mt-10 flex flex-col items-center gap-3">
+      {
+        APP_STORE_URL ? (
+          <a
+            href={APP_STORE_URL}
+            class="inline-flex min-h-[64px] items-center rounded-full bg-cta px-9 text-[19px] font-bold text-cta-label transition-transform duration-200 hover:scale-[1.02] active:scale-[0.98]"
+          >
+            Download on the App Store
+          </a>
+        ) : (
+          <p class="inline-flex min-h-[64px] items-center rounded-full bg-card px-9 text-[19px] font-bold text-ink surface-resting">
+            Coming to the App Store
+          </p>
+        )
+      }
+      <p class="text-sm text-ink-soft">iPhone · iOS 17 or later</p>
+    </div>
+  </section>
+
+  <!-- The moment: the wedge of the product -->
+  <section class="mx-auto w-full max-w-3xl px-6 pb-24" aria-labelledby="moment-heading">
+    <div
+      class="rounded-[var(--radius-sheet)] bg-card-warm px-6 py-12 surface-resting sm:px-12 sm:py-14"
+    >
+      <div class="mx-auto max-w-lg text-center">
+        <h2 id="moment-heading" class="font-serif text-3xl font-semibold sm:text-4xl">
+          The moment of choice
+        </h2>
+        <p class="mt-4 leading-relaxed text-ink-soft">
+          A claw machine in a shopping centre. A toy at the checkout. The parent taps once and hands
+          the phone over. After a breath, the child sees two choices — and neither one is the right
+          answer.
+        </p>
+      </div>
+
+      <div class="mt-11">
+        <ChoicePair />
+      </div>
+
+      <p class="mx-auto mt-11 max-w-lg text-center leading-relaxed text-ink-soft">
+        Both cards are the same size, the same weight, the same warmth. Nothing glows, nothing is
+        pre-selected, and nothing nudges. The choice belongs to the child, and Paulo records it
+        without judging it.
+      </p>
+    </div>
+  </section>
+
+  <!-- How it works -->
+  <section class="mx-auto w-full max-w-3xl px-6 pb-24" aria-labelledby="how-heading">
+    <h2 id="how-heading" class="text-center font-serif text-3xl font-semibold sm:text-4xl">
+      How it works
+    </h2>
+
+    <ol class="mt-12 grid gap-6 sm:grid-cols-2">
+      {
+        steps.map((step) => (
+          <li class="rounded-[var(--radius-card)] bg-card p-7 surface-resting">
+            <span
+              class="flex h-9 w-9 items-center justify-center rounded-full bg-card-warm font-bold text-ink-soft"
+              aria-hidden="true"
+            >
+              {step.n}
+            </span>
+            <h3 class="mt-4 font-serif text-xl font-semibold">{step.title}</h3>
+            <p class="mt-2.5 leading-relaxed text-ink-soft">{step.body}</p>
+          </li>
+        ))
+      }
+    </ol>
+  </section>
+
+  <!-- Privacy -->
+  <section class="mx-auto w-full max-w-3xl px-6 pb-24" aria-labelledby="privacy-heading">
+    <div
+      class="rounded-[var(--radius-sheet)] bg-wins-deep px-7 py-12 text-center sm:px-12 sm:py-14"
+    >
+      <h2
+        id="privacy-heading"
+        class="font-serif text-3xl font-semibold text-[color:var(--color-cta-label)] sm:text-4xl"
+      >
+        It never leaves your phone
+      </h2>
+      <p class="mx-auto mt-5 max-w-xl leading-relaxed text-[color:var(--color-cta-label)]/75">
+        Paulo has no server, so there is nowhere for your family’s life to go. No accounts, no ads,
+        no analytics, no tracking — and no network requests of any kind. The photos of your
+        children, their voices, and the promises you make them stay on the device you own.
+      </p>
+      <a
+        href="/privacy"
+        class="mt-8 inline-flex min-h-[56px] items-center rounded-full bg-[color:var(--color-cta-label)] px-7 text-[17px] font-bold text-ink transition-transform duration-200 hover:scale-[1.02] active:scale-[0.98]"
+      >
+        Read the privacy policy
+      </a>
+    </div>
+  </section>
+
+  <!-- What Paulo is not -->
+  <section class="mx-auto w-full max-w-3xl px-6 pb-24" aria-labelledby="not-heading">
+    <div class="mx-auto max-w-lg text-center">
+      <h2 id="not-heading" class="font-serif text-3xl font-semibold sm:text-4xl">
+        What Paulo is not
+      </h2>
+      <p class="mt-4 leading-relaxed text-ink-soft">
+        There are no streaks, no rankings, no comparing one child to another, and no reason to open
+        the app when nothing real is happening. Paulo exists to improve a moment away from the
+        screen, and then to be closed.
+      </p>
+    </div>
+
+    <ul class="mx-auto mt-9 flex max-w-xl flex-wrap justify-center gap-2.5">
+      {
+        notList.map((item) => (
+          <li class="rounded-full bg-card px-5 py-2.5 text-[15px] font-medium text-ink-soft surface-resting">
+            {item}
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+</BaseLayout>

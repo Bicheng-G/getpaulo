@@ -1,0 +1,92 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { SITE } from '../config';
+
+const faqs = [
+  {
+    q: 'Where is my family’s data stored?',
+    a: 'On your device, and only on your device. Paulo has no server and no account system, and it makes no network requests. Photos, voice notes, wishes, and the promise ledger never leave the phone.',
+  },
+  {
+    q: 'How do I erase everything?',
+    a: 'A parent can erase all local app data from Settings, which returns Paulo to first-run setup. Deleting the app from the device also removes all of Paulo’s local data.',
+  },
+  {
+    q: 'Why does Paulo ask for camera, photo, and microphone access?',
+    a: 'So a family can take or choose a photo for a wish sticker or profile picture, and record short voice notes for My Trail and My Plan. Paulo only uses these when you actively use that feature, and nothing captured this way is uploaded anywhere.',
+  },
+  {
+    q: 'Can two parents share the same wishes and ledger?',
+    a: 'Not in this version. Paulo’s configuration reserves an iCloud container for a future family-sync feature, but it is not active — the data store is explicitly on-device only today. The privacy policy and App Store disclosures will be updated before that ships.',
+  },
+  {
+    q: 'What is a star worth?',
+    a: 'Whatever your family agrees it is worth. A star is one unit of a real family promise, not a generic point — you decide what one means when you set up your family rules. There is an optional, parent-gated real-money value, but Paulo itself never moves money.',
+  },
+  {
+    q: 'Does Paulo score or rank my child?',
+    a: 'No. There are no streaks, no rankings, no sibling comparison, and no scoring of the child. Choosing to enjoy something now is a legitimate choice, and Paulo records it without judging it.',
+  },
+  {
+    q: 'Which devices does Paulo support?',
+    a: 'iPhone running iOS 17 or later.',
+  },
+  {
+    q: 'What accessibility settings does Paulo respect?',
+    a: 'Paulo follows the system Reduce Motion setting, supports Dynamic Type on parent-facing screens, and keeps sound and haptics optional and parent-controlled. Accessibility work is ongoing — if something is hard to use for your family, please tell us.',
+  },
+];
+---
+
+<BaseLayout
+  title="Support"
+  description="Help with Paulo — contact, common questions about data, permissions, family rules, and how to erase your information."
+>
+  <div class="mx-auto w-full max-w-2xl px-6 pt-6 pb-4">
+    <header class="mb-10">
+      <h1 class="font-serif text-4xl leading-tight font-semibold sm:text-[2.6rem]">Support</h1>
+      <p class="mt-4 text-lg leading-relaxed text-ink-soft">
+        Questions, problems, or feedback about Paulo — a real person reads every message.
+      </p>
+    </header>
+
+    <section
+      class="rounded-[var(--radius-card)] bg-card p-7 surface-resting sm:p-8"
+      aria-labelledby="contact-heading"
+    >
+      <h2 id="contact-heading" class="font-serif text-2xl font-semibold">Get in touch</h2>
+      <p class="mt-3 leading-relaxed text-ink-soft">
+        Email us and we’ll reply as soon as we can, usually within a few days.
+      </p>
+      <a
+        href={`mailto:${SITE.supportEmail}`}
+        class="mt-6 inline-flex min-h-[56px] items-center rounded-full bg-cta px-7 text-[17px] font-bold text-cta-label transition-transform duration-200 hover:scale-[1.02] active:scale-[0.98]"
+      >
+        {SITE.supportEmail}
+      </a>
+    </section>
+
+    <section class="mt-14" aria-labelledby="faq-heading">
+      <h2 id="faq-heading" class="font-serif text-2xl font-semibold">Common questions</h2>
+      <dl class="mt-6 space-y-7">
+        {
+          faqs.map((faq) => (
+            <div class="border-b border-ink/8 pb-7 last:border-0">
+              <dt class="font-serif text-lg font-semibold text-ink">{faq.q}</dt>
+              <dd class="mt-2.5 leading-relaxed text-ink-soft">{faq.a}</dd>
+            </div>
+          ))
+        }
+      </dl>
+    </section>
+
+    <section class="mt-12" aria-labelledby="report-heading">
+      <h2 id="report-heading" class="font-serif text-2xl font-semibold">Reporting a problem</h2>
+      <p class="mt-3 leading-relaxed text-ink-soft">
+        If something went wrong, it helps to include your iPhone model, your iOS version, the
+        version of Paulo from Settings, and what you were doing when it happened. Please don’t send
+        photos of your children — we don’t need them, and we’d rather they stayed on your device.
+      </p>
+    </section>
+  </div>
+</BaseLayout>
