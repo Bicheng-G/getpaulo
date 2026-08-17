@@ -130,4 +130,4 @@ draw conclusions about a child.
 
 ## Contact
 
-hi@bicheng.me
+hello@goodstuffstudio.app

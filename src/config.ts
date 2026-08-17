@@ -8,7 +8,7 @@ export const SITE = {
   url: 'https://getpaulo.app',
   /** App Store subtitle, from docs/release/testflight-app-store-metadata.md */
   tagline: 'Real wishes, real choices, real promises',
-  supportEmail: 'hi@bicheng.me',
+  supportEmail: 'hello@goodstuffstudio.app',
 } as const;
 
 /**
