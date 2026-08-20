@@ -1,0 +1,53 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { SITE } from '../config';
+
+const destinations = [
+  { href: '/', label: 'Home', blurb: 'What Paulo is, and how a family uses it.' },
+  { href: '/support', label: 'Support', blurb: 'Common questions, and how to reach a real person.' },
+  { href: '/privacy', label: 'Privacy Policy', blurb: 'What stays on your device, in plain language.' },
+];
+---
+
+<BaseLayout
+  title="Page not found"
+  description="That page doesn’t exist. Links to the main pages on getpaulo.app."
+>
+  <div class="mx-auto w-full max-w-2xl px-6 pt-6 pb-4">
+    <header class="mb-10">
+      <p class="font-serif text-lg text-ink-faint">404</p>
+      <h1 class="mt-2 font-serif text-4xl leading-tight font-semibold sm:text-[2.6rem]">
+        This page doesn’t exist
+      </h1>
+      <p class="mt-4 text-lg leading-relaxed text-ink-soft">
+        The link may be out of date, or there may be a typo in the address. Nothing is broken on
+        your end.
+      </p>
+    </header>
+
+    <nav aria-label="Main pages">
+      <ul class="space-y-3">
+        {
+          destinations.map((item) => (
+            <li>
+              <a
+                href={item.href}
+                class="block rounded-[var(--radius-card)] bg-card p-6 surface-resting transition-transform duration-200 hover:scale-[1.01] active:scale-[0.99]"
+              >
+                <span class="font-serif text-xl font-semibold text-ink">{item.label}</span>
+                <span class="mt-1.5 block leading-relaxed text-ink-soft">{item.blurb}</span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <p class="mt-12 leading-relaxed text-ink-soft">
+      If you followed a link from somewhere on this site and landed here, we’d like to fix it —
+      <a class="underline underline-offset-4 hover:text-ink" href={`mailto:${SITE.supportEmail}`}>
+        {SITE.supportEmail}
+      </a>.
+    </p>
+  </div>
+</BaseLayout>
