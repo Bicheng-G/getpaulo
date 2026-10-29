@@ -16,13 +16,13 @@ out/
 # Netlify
 .netlify/
 
-# Internal documentation — design system, strategy, release runbooks.
-# Not published. Anything the site needs at BUILD time must live outside this
-# folder (see src/content/legal/ for the privacy policy).
-docs/
+# Design documents and prototypes are tracked. User-dropped prototype photos
+# are local data, not source assets; review them separately before publishing.
+.image-slots.state.json
 
 # Agent and editor local config
-.claude/
+.claude/*
+!.claude/launch.json
 .vscode/
 .idea/
 *.swp

@@ -6,11 +6,11 @@ for parent–child co-regulation around delayed gratification.
 The site's first job is compliance: `/privacy` and `/support` must resolve before the App Store
 submission, because Apple checks them during review.
 
-> **`docs/` is internal and is not in this repository.** The design system, strategy notes, and
-> release runbooks live there locally but are git-ignored. Comments throughout this codebase cite
-> those files (`docs/design/system.md#colour-tokens` and similar) because they remain the authority
-> for anyone who has them — they just aren't published here. **Nothing the site needs at build time
-> may live in `docs/`**, or the Netlify build will fail on a clean checkout.
+> **`docs/` is version-controlled project documentation.** A fresh clone includes the design
+> notes, prototypes, reference assets and release drafts that previously lived only on the old
+> computer. Start with [docs/README.md](docs/README.md) for scope and historical caveats. The
+> website's published legal content remains in `src/content/legal/`; documentation and prototypes
+> are not website routes and are not copied into `dist/`.
 
 ## Stack
 
@@ -25,9 +25,15 @@ submission, because Apple checks them during review.
 ## Develop
 
 ```bash
-npm install
+git clone https://github.com/Bicheng-G/getpaulo.git
+cd getpaulo
+npm ci
 npm run dev
 ```
+
+Use Node 22 to match Netlify. The portable `.claude/launch.json` preview configuration is also
+tracked; dependency and build directories are regenerated. No local environment file is needed
+for the current static website. The native iPhone app is a separate project, not included here.
 
 Then open http://localhost:4321.
 
@@ -42,8 +48,9 @@ Then open http://localhost:4321.
 
 **The privacy policy is site-owned content.**
 [`src/content/legal/privacy-policy.md`](src/content/legal/privacy-policy.md) is the published source
-of truth, rendered at `/privacy`. It moved out of the internal `docs/release/` tree precisely
-because the build depends on it. When it changes, bump `lastUpdated` in its frontmatter — the page
+of truth, rendered at `/privacy`. It moved out of `docs/release/` when documentation was local-only;
+that separation remains so historical drafts cannot change published copy. When it changes, bump
+`lastUpdated` in its frontmatter — the page
 shows that date — and update the App Store Connect disclosures in the same pass.
 
 **Design tokens are a port, not an invention.** `src/styles/global.css` mirrors

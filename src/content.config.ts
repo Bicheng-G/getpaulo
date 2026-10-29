@@ -3,8 +3,8 @@ import { glob } from 'astro/loaders';
 
 /**
  * Public-facing legal copy. These files are the published source of truth —
- * `docs/` is internal and is not part of the repository, so nothing the site
- * needs at build time may live there.
+ * `docs/` contains version-controlled design notes and historical release drafts;
+ * the website loads legal content only from `src/content/legal/`.
  *
  * When the policy changes, edit the markdown here and bump `lastUpdated`. The
  * App Store submission points at the rendered page, so this file and the
