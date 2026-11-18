@@ -1,7 +1,7 @@
 ---
 title: Privacy Policy
 description: Paulo has no advertising, no analytics, no third-party tracking, no Paulo account, and no Paulo server. Family data stays in a local replica on the device, mirrored through the parent's own private iCloud account.
-lastUpdated: 2026-08-04
+lastUpdated: 2026-11-17
 ---
 
 Paulo is a child-first, parent-assisted app that helps a family practise delayed gratification
@@ -31,8 +31,8 @@ These values belong to one family space. The Apple Account that creates the fami
 its CloudKit records. Data remains fully usable when iCloud or the network is unavailable; local
 changes are sent to iCloud asynchronously when possible.
 
-App preferences — onboarding completion, sound, haptics, appearance, and debug settings — are stored
-on the device in `UserDefaults`. Temporary camera and recording files and image caches use the device
+App preferences — onboarding completion, language, sound, haptics, appearance, and which grown-up
+prompts have been shown — are stored on the device in `UserDefaults`. Temporary camera and recording files and image caches use the device
 file system and are not part of the formal family record. Paulo does not intentionally retain raw,
 full-resolution source photos after processing.
 
@@ -52,11 +52,21 @@ Paulo does not use location services, does not request tracking permission, and 
 marketing or engagement notifications. The app's remote-notification capability exists solely so
 Apple can wake it to deliver iCloud sync changes.
 
+**Reminders and the alarm.** If a grown-up turns them on, Paulo can remind them on the day a wish was
+promised, tell them about a real family event, and ring an alarm when a timed turn ends. Each is
+scheduled **on the device** through iOS; no Paulo server sends or knows about it. Paulo asks for
+permission only when a grown-up first turns one on, and the reminder never carries a price, an offer
+or a deadline.
+
+**Face ID.** A grown-up may choose Face ID instead of the arithmetic sum to open the grown-ups'
+pages. Paulo asks iOS to check and receives only *yes* or *no*; it never sees, stores or transmits
+biometric data.
+
 ## iCloud, Family Sharing, and Roles
 
-Creating or joining a family requires an available iCloud account. Once a family exists, iCloud
-availability is irrelevant to ordinary use — capture, the choice ritual, the ledger, My Trail and My
-Plan all work offline, and writes reconcile on reconnect.
+**Creating or joining a family requires an available iCloud account.** Once a family exists,
+iCloud availability is irrelevant to ordinary use — capture, the choice ritual, the ledger, My Trail
+and My Plan all work offline, and writes reconcile on reconnect.
 
 An owned family space uses the current Apple Account's **private** CloudKit database from its first
 formal save. Personal iCloud mirroring across that parent's own devices, and recovery after a
@@ -72,15 +82,18 @@ nor transmits the other caregiver's Apple Account identity itself.
 Accepting an invitation does not move the family to a different database, and does not give either
 caregiver access to anything outside that one family space.
 
-## Subscriptions (Paulo Pro)
+## Paulo Family (subscription and lifetime purchase)
 
-Paulo Pro is an auto-renewable subscription sold through Apple's App Store, monthly or yearly. Apple
+Everything for the children is free. **Paulo Family** is the optional paid tier for the grown-ups
+(sharing the family with another grown-up, the turn-end alarm, and the promise-day reminder). It is
+sold through Apple's App Store as an auto-renewing subscription, yearly or monthly (the yearly plan
+offers a free trial to new subscribers), or as a one-time lifetime purchase that does not renew. Apple
 processes the purchase; Paulo never sees or handles payment details, and there is no Paulo account to
 create.
 
 Whether a caregiver is subscribed is determined **on their own device, from their own Apple Account**,
 using Apple's StoreKit. Paulo reads only what StoreKit reports for that device — product identifier,
-expiry, grace-period and revocation status. **No device ever proves anything about another device's
+expiry (none for lifetime), grace-period and revocation status. **No device ever proves anything about another device's
 subscription**, and no subscription information is written into the shared family data or sent
 anywhere. A subscription obtained through Apple's Family Sharing is treated identically to one bought
 directly; Paulo does not record which it is.
@@ -93,10 +106,29 @@ keeps working. The child never sees a paywall.
 ## Data Sharing and Network Use
 
 Paulo uses two Apple services over the network and no others: **iCloud/CloudKit** for private
-mirroring and invited-family collaboration, and the **App Store / StoreKit** for the subscription.
+mirroring and invited-family collaboration, and the **App Store / StoreKit** for Paulo Family.
 Paulo does not provide family data to advertisers, analytics companies, data brokers, or a Paulo
 backend, because none exist. Apple's handling of iCloud and App Store data is governed by the user's
 Apple Account and Apple's own terms.
+
+**Sharing a wish story.** When a wish has been fulfilled, a parent can make a picture of it — the
+wish's sticker, the prize's sticker, the dates and the number of stars — and share it with other
+apps. Sharing happens only if the child first chooses to add their thumbprint to the story, and only
+after a grown-up passes the parental gate. The picture and its suggested caption are made on the
+device; no name appears unless the parent turns it on, and Paulo points out when the prize photo
+contains a face. The parent then sends it through Apple's standard share sheet to an app or person
+they choose. Paulo itself does not upload, store or receive the picture anywhere, and the image it
+makes carries no location or other photo metadata. Once shared, the copy is governed by the app it
+was sent to.
+
+**Sending feedback.** Settings has a *Send feedback* row, opened only behind the parental gate. It
+prepares an email to `hello@goodstuffstudio.app` in the parent's own mail app, with a short block of
+technical details — app version, install type, iOS version, device model, language, whether the
+family is shared, whether Paulo Family is on, and a random reference — shown in the email so the
+parent can read and delete it first. It contains no names, photos, wishes, stars or other family
+content. Paulo sends nothing itself; the email goes only if the parent sends it. Feedback a parent
+emails is read by the maker and may be processed by automated tools, including an AI service, to sort
+and answer it, and is kept only as long as it is needed.
 
 Paulo's privacy manifest (`PrivacyInfo.xcprivacy`) declares no tracking, no tracking domains, and no
 collected data types; the only declared API access is `UserDefaults` for app settings.
