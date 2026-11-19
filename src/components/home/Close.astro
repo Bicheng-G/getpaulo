@@ -1,0 +1,151 @@
+---
+/** The close: the name's origin in one line, then the one action. */
+import { Image } from 'astro:assets';
+import GetPaulo from '../GetPaulo.astro';
+import FilmButton from '../FilmButton.astro';
+import icon from '../../assets/ui/app-icon.png';
+import rideOn from '../../assets/clay/TemptationRideOn.png';
+import plane from '../../assets/toys/plane.png';
+import truck from '../../assets/toys/truck.png';
+import bricks from '../../assets/toys/bricks.png';
+---
+
+<section class="close section-pad" aria-labelledby="close-title">
+  <div class="wrap close-inner">
+    <div class="close-toys" aria-hidden="true">
+      <div class="close-toy t1"><div data-poke><Image src={plane} alt="" width={200} class="sticker-shadow" /></div></div>
+      <div class="close-toy t2"><div data-poke><Image src={truck} alt="" width={200} class="sticker-shadow" /></div></div>
+      <div class="close-toy t3"><div data-poke><Image src={bricks} alt="" width={180} class="sticker-shadow" /></div></div>
+      <div class="close-toy t4"><div data-poke><Image src={rideOn} alt="" width={180} /></div></div>
+    </div>
+
+    <div class="close-icon" data-poke tabindex="0" role="img" aria-label="The Paulo app icon: a child reaching for a star">
+      <Image src={icon} alt="" width={180} />
+    </div>
+
+    <h2 id="close-title" class="display close-title">A wish worth <span class="accent">waiting&nbsp;for.</span></h2>
+    <p class="lede close-lede">
+      Paulo is named after a four-year-old who skipped four rides on a ride-on to get a toy car of
+      his own. <a href="/story" class="link">Read how it started</a>.
+    </p>
+    <div class="close-actions">
+      <GetPaulo />
+      <FilmButton />
+    </div>
+    <p class="close-note">iPhone · iOS 17 or later · Free for children, forever</p>
+  </div>
+</section>
+
+<style>
+  .close {
+    position: relative;
+    overflow: clip;
+  }
+
+  .close-inner {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .close-icon {
+    width: clamp(110px, 12vw, 150px);
+    border-radius: 24%;
+    overflow: hidden;
+    box-shadow:
+      0 4px 8px rgb(32 48 60 / 0.12),
+      0 20px 40px rgb(32 48 60 / 0.16);
+    rotate: -6deg;
+  }
+
+  .close-icon :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .close-title {
+    margin-top: 32px;
+    max-width: 9em;
+  }
+
+  .close-lede {
+    margin-top: 24px;
+    max-width: 30em;
+  }
+
+  .close-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 14px 16px;
+    margin-top: 36px;
+  }
+
+  .close-note {
+    margin-top: 18px;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--color-ink-soft);
+  }
+
+  .close-toys {
+    position: absolute;
+    inset: 0;
+    display: none;
+  }
+
+  .close-toy {
+    position: absolute;
+    width: clamp(90px, 11vw, 150px);
+  }
+
+  .close-toy :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .t1 {
+    left: 2%;
+    top: 4%;
+    rotate: -10deg;
+  }
+
+  .t2 {
+    right: 2%;
+    top: 10%;
+    rotate: 8deg;
+  }
+
+  .t3 {
+    left: 6%;
+    bottom: 6%;
+    rotate: 6deg;
+  }
+
+  .t4 {
+    right: 6%;
+    bottom: 2%;
+    rotate: -8deg;
+  }
+
+  @media (min-width: 600px) {
+    .close-actions {
+      flex-direction: row;
+      align-items: normal;
+      width: auto;
+    }
+  }
+
+  @media (min-width: 900px) {
+    .close-toys {
+      display: block;
+    }
+  }
+</style>

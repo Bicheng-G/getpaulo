@@ -1,0 +1,378 @@
+---
+import { Image } from 'astro:assets';
+import Phone from '../Phone.astro';
+import GetPaulo from '../GetPaulo.astro';
+import FilmButton from '../FilmButton.astro';
+import homeScreen from '../../assets/screens/home.png';
+import rideOn from '../../assets/clay/TemptationRideOn.png';
+import claw from '../../assets/clay/TemptationClawMachine.png';
+import jar from '../../assets/clay/MomentSaveJar.png';
+import treat from '../../assets/clay/TemptationTreat.png';
+import elephant from '../../assets/toys/elephant.png';
+---
+
+<section class="hero" aria-labelledby="hero-title">
+  <div class="wrap hero-grid">
+    <div class="hero-copy">
+      <p class="eyebrow" data-enter style="--i:0">
+        <span class="dot" aria-hidden="true"></span> iPhone app for families with children 4–8
+      </p>
+      <h1 id="hero-title" class="display" data-enter style="--i:1">
+        A wish worth <span class="accent">waiting&nbsp;for.</span>
+      </h1>
+      <p class="lede hero-lede" data-enter style="--i:2">
+        Paulo turns the “I want it!” moment into a small, calm ritual. Grown-ups set the deal. Kids
+        make the choice, and see exactly what it does.
+      </p>
+      <div class="hero-actions" data-enter style="--i:3">
+        <GetPaulo />
+        <FilmButton tone="ghost" />
+      </div>
+      <ul class="hero-facts" data-enter style="--i:4">
+        <li>Free for children, forever</li>
+        <li>No ads</li>
+        <li>No tracking</li>
+      </ul>
+    </div>
+
+    <div class="hero-stage">
+      <div class="stage-glow" aria-hidden="true"></div>
+
+      <div class="hero-phone" data-enter style="--i:2">
+        <Phone label="Paulo's Home screen: a toy taxi wish, one more star to go." style="--w: var(--phone-w)">
+          <Image src={homeScreen} alt="" widths={[300, 600]} sizes="300px" loading="eager" fetchpriority="high" />
+        </Phone>
+      </div>
+
+      <div class="clay c-ride" data-enter="pop" style="--i:7; --r:12deg">
+        <div class="float" style="--d:7s; --delay:-1s">
+          <div data-poke tabindex="0" role="img" aria-label="A clay ride-on rocket">
+            <Image src={rideOn} alt="" width={240} loading="eager" />
+          </div>
+        </div>
+      </div>
+      <div class="clay c-claw" data-enter="pop" style="--i:8; --r:-10deg">
+        <div class="float" style="--d:8s; --delay:-3s">
+          <div data-poke tabindex="0" role="img" aria-label="A clay claw machine">
+            <Image src={claw} alt="" width={220} loading="eager" />
+          </div>
+        </div>
+      </div>
+      <div class="clay c-jar" data-enter="pop" style="--i:9; --r:8deg">
+        <div class="float" style="--d:6.5s; --delay:-2s">
+          <div data-poke tabindex="0" role="img" aria-label="A clay jar full of stars">
+            <Image src={jar} alt="" width={220} loading="eager" />
+          </div>
+        </div>
+      </div>
+      <div class="clay c-treat" data-enter="pop" style="--i:10; --r:-14deg">
+        <div class="float" style="--d:7.5s; --delay:-4s">
+          <div data-poke tabindex="0" role="img" aria-label="A clay ice cream">
+            <Image src={treat} alt="" width={180} loading="eager" />
+          </div>
+        </div>
+      </div>
+      <div class="clay c-elephant" data-enter="pop" style="--i:11; --r:10deg">
+        <div class="float" style="--d:9s; --delay:-5s">
+          <div data-poke tabindex="0" role="img" aria-label="A wished-for toy elephant">
+            <Image src={elephant} alt="" width={200} loading="lazy" class="sticker-shadow" />
+          </div>
+        </div>
+      </div>
+
+      <svg class="star s1" viewBox="0 0 24 24" aria-hidden="true" data-enter="pop" style="--i:12"><path d="M12 2.6l2.6 5.6 6.1.8-4.5 4.2 1.2 6-5.4-3-5.4 3 1.2-6L3.3 9l6.1-.8z"></path></svg>
+      <svg class="star s2" viewBox="0 0 24 24" aria-hidden="true" data-enter="pop" style="--i:13"><path d="M12 2.6l2.6 5.6 6.1.8-4.5 4.2 1.2 6-5.4-3-5.4 3 1.2-6L3.3 9l6.1-.8z"></path></svg>
+      <svg class="star s3" viewBox="0 0 24 24" aria-hidden="true" data-enter="pop" style="--i:14"><path d="M12 2.6l2.6 5.6 6.1.8-4.5 4.2 1.2 6-5.4-3-5.4 3 1.2-6L3.3 9l6.1-.8z"></path></svg>
+
+      <p class="poke-hint" data-enter style="--i:15" aria-hidden="true">
+        <svg width="34" height="26" viewBox="0 0 34 26"><path d="M2 4c8 0 18 3 24 14m0 0l-7-1.5M26 18l1.5-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+        go on, give it a poke
+      </p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    padding: clamp(16px, 5vw, 56px) 0 clamp(48px, 10vw, 140px);
+    overflow: clip;
+  }
+
+  /* Phones: copy is kept tight so the phone and its clay toys start above the
+     fold even on a 667px-tall screen; side by side from 900px. */
+  .hero-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    align-items: center;
+    gap: clamp(24px, 4vw, 64px);
+  }
+
+  .hero .eyebrow {
+    align-items: flex-start;
+  }
+
+  .hero-copy {
+    position: relative;
+    z-index: 2;
+  }
+
+  .dot {
+    flex: none;
+    width: 8px;
+    height: 8px;
+    margin-top: calc((1lh - 8px) / 2);
+    border-radius: 99px;
+    background: var(--color-cta);
+    box-shadow: 0 0 0 4px rgb(203 104 66 / 0.16);
+  }
+
+  .hero h1 {
+    margin-top: 14px;
+  }
+
+  .hero-lede {
+    margin-top: 16px;
+    max-width: 30em;
+  }
+
+  .hero-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px 16px;
+    margin-top: 24px;
+  }
+
+  .hero-facts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 20px;
+    margin-top: 18px;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--color-ink-soft);
+  }
+
+  .hero-facts li {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .hero-facts li::before {
+    content: '';
+    width: 16px;
+    height: 16px;
+    border-radius: 99px;
+    background:
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M4.5 8.3l2.2 2.2 4.8-5' fill='none' stroke='%23fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")
+        center / 100% no-repeat,
+      var(--color-sage);
+  }
+
+  /* ---------- The stage ---------- */
+
+  .hero-stage {
+    --phone-w: min(62vw, 280px);
+    position: relative;
+    display: grid;
+    place-items: center;
+    min-height: calc(var(--phone-w) * 2.3);
+  }
+
+  .stage-glow {
+    position: absolute;
+    width: 120%;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: radial-gradient(
+      closest-side,
+      rgb(248 236 192 / 0.9),
+      rgb(248 236 192 / 0.35) 55%,
+      transparent
+    );
+  }
+
+  .hero-phone {
+    position: relative;
+    z-index: 1;
+    rotate: 3deg;
+  }
+
+  .clay {
+    position: absolute;
+    z-index: 2;
+  }
+
+  .float {
+    animation: float var(--d, 7s) ease-in-out var(--delay, 0s) infinite alternate;
+  }
+
+  @keyframes float {
+    from {
+      transform: translateY(-6px) rotate(-1.5deg);
+    }
+    to {
+      transform: translateY(7px) rotate(1.5deg);
+    }
+  }
+
+  .clay :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .c-ride {
+    width: calc(var(--phone-w) * 0.62);
+    left: -8%;
+    bottom: 6%;
+  }
+
+  .c-claw {
+    width: calc(var(--phone-w) * 0.48);
+    right: -6%;
+    top: 30%;
+  }
+
+  .c-jar {
+    width: calc(var(--phone-w) * 0.52);
+    right: -8%;
+    bottom: 10%;
+  }
+
+  .c-treat {
+    width: calc(var(--phone-w) * 0.36);
+    left: 4%;
+    top: 36%;
+  }
+
+  .c-elephant {
+    width: calc(var(--phone-w) * 0.44);
+    right: 14%;
+    top: -4%;
+    display: none;
+  }
+
+  .star {
+    position: absolute;
+    z-index: 2;
+    fill: var(--color-star);
+    stroke: var(--color-star-deep);
+    stroke-width: 1.1;
+    stroke-linejoin: round;
+    filter: drop-shadow(0 3px 3px rgb(217 154 43 / 0.3));
+  }
+
+  .s1 {
+    width: 34px;
+    left: 18%;
+    top: 12%;
+    rotate: -14deg;
+  }
+
+  .s2 {
+    width: 22px;
+    right: 22%;
+    bottom: 2%;
+    rotate: 12deg;
+  }
+
+  .s3 {
+    width: 26px;
+    right: 2%;
+    top: 64%;
+    rotate: 20deg;
+  }
+
+  .poke-hint {
+    display: none;
+    position: absolute;
+    z-index: 4;
+    left: -16%;
+    bottom: 33%;
+    max-width: 8em;
+    line-height: 1.15;
+    align-items: flex-start;
+    gap: 6px;
+    font-family: var(--font-serif);
+    font-variation-settings: 'SOFT' 100, 'WONK' 1;
+    font-style: italic;
+    font-size: 17px;
+    color: var(--color-ink-soft);
+    rotate: -4deg;
+  }
+
+  .poke-hint svg {
+    order: 2;
+    rotate: -60deg;
+    margin-top: -14px;
+    color: var(--color-cta);
+  }
+
+  @media (min-width: 600px) {
+    .hero-actions {
+      flex-direction: row;
+      flex-wrap: wrap;
+      align-items: normal;
+      gap: 14px 16px;
+    }
+
+    .c-ride {
+      left: -4%;
+    }
+
+    .c-jar {
+      right: -4%;
+    }
+
+    .poke-hint {
+      display: flex;
+    }
+  }
+
+  @media (min-width: 900px) {
+    .hero {
+      padding: clamp(24px, 5vw, 56px) 0 clamp(80px, 10vw, 140px);
+    }
+
+    .hero-grid {
+      grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+      min-height: min(760px, calc(100dvh - 120px));
+    }
+
+    .hero h1 {
+      margin-top: 22px;
+    }
+
+    .hero-lede {
+      margin-top: 26px;
+    }
+
+    .hero-actions {
+      margin-top: 38px;
+    }
+
+    .hero-facts {
+      gap: 8px 22px;
+      margin-top: 30px;
+    }
+
+    .hero-stage {
+      --phone-w: clamp(240px, 24vw, 310px);
+    }
+  }
+
+  @media (min-width: 1200px) {
+    .c-elephant {
+      display: block;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .float {
+      animation: none;
+    }
+  }
+</style>

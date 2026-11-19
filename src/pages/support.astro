@@ -1,92 +1,297 @@
 ---
+import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import Faq from '../components/Faq.astro';
 import { SITE } from '../config';
+import jar from '../assets/clay/MomentSaveJar.png';
 
-const faqs = [
+const mail = `<a href="mailto:${SITE.supportEmail}">${SITE.supportEmail}</a>`;
+
+const groups = [
   {
-    q: 'Where is my family’s data stored?',
-    a: 'On your device, and only on your device. Paulo has no server and no account system, and it makes no network requests. Photos, voice notes, wishes, and the promise ledger never leave the phone.',
+    id: 'start',
+    title: 'Getting started',
+    items: [
+      {
+        id: 'coming-soon',
+        q: 'When can I get Paulo?',
+        a: '<p>Paulo 1.0 is with Apple for review. As soon as it is on the App Store, the buttons on this site will take you straight there.</p>',
+      },
+      {
+        q: 'Which devices does Paulo run on?',
+        a: '<p>iPhone with iOS 17 or later. The app speaks English, 简体中文, 繁體中文, 日本語 and Español.</p>',
+      },
+      {
+        q: 'What age is Paulo for?',
+        a: '<p>Children of about 4 to 8, always together with a grown-up. A child can use it before they can read: wishes are photos, stars are stones on a path, and the two choices are pictures.</p>',
+      },
+      {
+        q: 'How long does a Choice Moment take?',
+        a: '<p>About twenty seconds. Long-press the Paulo icon (or ask Siri) to go straight to a Choice Moment or a new wish, then hand the phone over.</p>',
+      },
+    ],
   },
   {
-    q: 'How do I erase everything?',
-    a: 'A parent can erase all local app data from Settings, which returns Paulo to first-run setup. Deleting the app from the device also removes all of Paulo’s local data.',
+    id: 'stars',
+    title: 'Wishes and stars',
+    items: [
+      {
+        q: 'What is a star worth?',
+        a: '<p>Whatever your family agrees, such as the price of one ride on the ride-on. A star is one unit of a real family promise, not a point and not a grade. Real money is an optional layer for grown-ups, off by default, and it never appears in a Choice Moment.</p>',
+      },
+      {
+        q: 'Do children earn stars for chores or good behaviour?',
+        a: '<p>No. Brushing teeth, tidying up and being kind never turn into stars. Stars come from choosing to save in a Choice Moment, so a child learns “I waited, so my wish came closer”, not “I was good, so I got points”.</p>',
+      },
+      {
+        q: 'What happens if my child changes their mind?',
+        a: '<p>On the result screen a child can hold <em>Changed my mind</em> once to go back to the two choices. The change is kept as a visible line in the family’s record; nothing quietly disappears. If they lose interest in a wish, it can be archived, and their stars stay theirs.</p>',
+      },
+      {
+        q: 'What is the difference between “ready” and “came true”?',
+        a: '<p>Ready means there are enough stars. Came true means the family actually followed through. When a wish is ready you choose a day (“We get it on Saturday”), and only when you take the photo of the real thing does Paulo call it a wish come true.</p>',
+      },
+      {
+        q: 'Can I have more than one child in Paulo?',
+        a: '<p>Yes, as many as you like, for free. Each child has their own wishes, stars and path, and they are never compared, ranked or shown side by side.</p>',
+      },
+    ],
   },
   {
-    q: 'Why does Paulo ask for camera, photo, and microphone access?',
-    a: 'So a family can take or choose a photo for a wish sticker or profile picture, and record short voice notes for My Trail and My Plan. Paulo only uses these when you actively use that feature, and nothing captured this way is uploaded anywhere.',
+    id: 'family',
+    title: 'Paulo Family and billing',
+    items: [
+      {
+        q: 'What is free, and what is Paulo Family?',
+        a: '<p>Everything a child uses is free, forever: wishes, stars, Choice Moments, My Week tickets and timers, My Trail. Paulo Family is optional and for grown-ups: syncing with another caregiver, an alarm when a timed turn ends, and a reminder on the day you promised a wish. <a href="/pricing">See pricing</a>.</p>',
+      },
+      {
+        q: 'How do I cancel or manage my subscription?',
+        a: '<p>On your iPhone open Settings, tap your name, then Subscriptions. Subscriptions renew automatically unless cancelled at least 24 hours before the period ends. If you cancel, everything your family made stays.</p>',
+      },
+      {
+        q: 'Does Family Sharing cover my partner?',
+        a: '<p>Yes. Paulo Family works with Apple’s Family Sharing, so one purchase covers the household.</p>',
+      },
+      {
+        q: 'How do I restore a purchase?',
+        a: '<p>Open the grown-ups’ pages in Paulo (behind the parent gate) and choose Restore purchases in the Paulo Family screen.</p>',
+      },
+    ],
   },
   {
-    q: 'Can two parents share the same wishes and ledger?',
-    a: 'Not in this version. Paulo’s configuration reserves an iCloud container for a future family-sync feature, but it is not active — the data store is explicitly on-device only today. The privacy policy and App Store disclosures will be updated before that ships.',
+    id: 'privacy',
+    title: 'Privacy and data',
+    items: [
+      {
+        q: 'Where is my family’s data stored?',
+        a: '<p>On your devices and in your own private iCloud. Paulo has no server, no account and no analytics. Photos, voice notes, wishes and stars are never sent to us. <a href="/privacy">Read the privacy policy</a>.</p>',
+      },
+      {
+        q: 'Why does Paulo ask for the camera, photos and microphone?',
+        a: '<p>To photograph a wish or choose a profile picture, and to record short voice notes for My Trail and My Plan. Paulo asks only when you first use that feature. Stickers and wish-name suggestions are made on the device.</p>',
+      },
+      {
+        q: 'How do I export or erase everything?',
+        a: '<p>In the grown-ups’ pages, Export saves a family archive to a file you control. Erase family content removes the children, wishes, stars, keepsakes, photos and recordings from the device and asks iCloud to delete its copies. Exporting and erasing your own data are always free.</p>',
+      },
+      {
+        q: 'Can my child share things from Paulo?',
+        a: '<p>Only a wish story, after a wish came true, and only if the child adds their thumbprint first and a grown-up then passes the parent gate. No name is included unless you turn it on, and the picture carries no location.</p>',
+      },
+    ],
   },
   {
-    q: 'What is a star worth?',
-    a: 'Whatever your family agrees it is worth. A star is one unit of a real family promise, not a generic point — you decide what one means when you set up your family rules. There is an optional, parent-gated real-money value, but Paulo itself never moves money.',
-  },
-  {
-    q: 'Does Paulo score or rank my child?',
-    a: 'No. There are no streaks, no rankings, no sibling comparison, and no scoring of the child. Choosing to enjoy something now is a legitimate choice, and Paulo records it without judging it.',
-  },
-  {
-    q: 'Which devices does Paulo support?',
-    a: 'iPhone running iOS 17 or later.',
-  },
-  {
-    q: 'What accessibility settings does Paulo respect?',
-    a: 'Paulo follows the system Reduce Motion setting, supports Dynamic Type on parent-facing screens, and keeps sound and haptics optional and parent-controlled. Accessibility work is ongoing — if something is hard to use for your family, please tell us.',
+    id: 'access',
+    title: 'Devices and accessibility',
+    items: [
+      {
+        q: 'What accessibility settings does Paulo respect?',
+        a: '<p>Paulo follows Reduce Motion (every animation has a quiet version), supports Dynamic Type on grown-up screens, and keeps sound and haptics optional. If something is hard to use for your family, please tell us.</p>',
+      },
+      {
+        q: 'How does the parent gate work?',
+        a: '<p>Grown-up pages ask for a quick sum, or Face ID if you prefer. With Face ID, Paulo only hears “yes” or “no” from iOS; it never sees biometric data.</p>',
+      },
+    ],
   },
 ];
 ---
 
 <BaseLayout
   title="Support"
-  description="Help with Paulo — contact, common questions about data, permissions, family rules, and how to erase your information."
+  description="Help with Paulo: contact a real person, and answers about wishes and stars, Paulo Family, privacy, erasing your data and accessibility."
 >
-  <div class="mx-auto w-full max-w-2xl px-6 pt-6 pb-4">
-    <header class="mb-10">
-      <h1 class="font-serif text-4xl leading-tight font-semibold sm:text-[2.6rem]">Support</h1>
-      <p class="mt-4 text-lg leading-relaxed text-ink-soft">
-        Questions, problems, or feedback about Paulo — a real person reads every message.
-      </p>
-    </header>
-
-    <section
-      class="rounded-[var(--radius-card)] bg-card p-7 surface-resting sm:p-8"
-      aria-labelledby="contact-heading"
-    >
-      <h2 id="contact-heading" class="font-serif text-2xl font-semibold">Get in touch</h2>
-      <p class="mt-3 leading-relaxed text-ink-soft">
-        Email us and we’ll reply as soon as we can, usually within a few days.
-      </p>
-      <a
-        href={`mailto:${SITE.supportEmail}`}
-        class="mt-6 inline-flex min-h-[56px] items-center rounded-full bg-cta px-7 text-[17px] font-bold text-cta-label transition-transform duration-200 hover:scale-[1.02] active:scale-[0.98]"
-      >
+  <PageHero eyebrow="Support" id="support-title">
+    <Fragment slot="title">How can we <span class="accent">help?</span></Fragment>
+    <Fragment slot="lede">
+      <p>Questions, problems or ideas about Paulo. A real person reads every message.</p>
+    </Fragment>
+    <Fragment slot="actions">
+      <a href={`mailto:${SITE.supportEmail}`} class="btn btn-primary">
+        <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16v12H4zM4 7l8 6 8-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"></path></svg>
         {SITE.supportEmail}
       </a>
-    </section>
+    </Fragment>
+    <div slot="art" class="support-art">
+      <div data-poke tabindex="0" role="img" aria-label="A clay jar full of stars">
+        <Image src={jar} alt="" width={360} loading="eager" />
+      </div>
+      <p class="support-bubble serif">We usually reply within a few days.</p>
+    </div>
+  </PageHero>
 
-    <section class="mt-14" aria-labelledby="faq-heading">
-      <h2 id="faq-heading" class="font-serif text-2xl font-semibold">Common questions</h2>
-      <dl class="mt-6 space-y-7">
+  <section class="support section-pad" aria-labelledby="faq-title">
+    <div class="wrap support-grid">
+      <nav class="support-toc" aria-label="Question topics">
+        <h2 id="faq-title" class="title">Common questions</h2>
+        <ul>
+          {groups.map((g) => <li><a href={`#${g.id}`}>{g.title}</a></li>)}
+        </ul>
+      </nav>
+
+      <div class="support-groups">
         {
-          faqs.map((faq) => (
-            <div class="border-b border-ink/8 pb-7 last:border-0">
-              <dt class="font-serif text-lg font-semibold text-ink">{faq.q}</dt>
-              <dd class="mt-2.5 leading-relaxed text-ink-soft">{faq.a}</dd>
+          groups.map((g) => (
+            <div class="support-group" id={g.id}>
+              <h3 class="support-h">{g.title}</h3>
+              <Faq items={g.items} />
             </div>
           ))
         }
-      </dl>
-    </section>
 
-    <section class="mt-12" aria-labelledby="report-heading">
-      <h2 id="report-heading" class="font-serif text-2xl font-semibold">Reporting a problem</h2>
-      <p class="mt-3 leading-relaxed text-ink-soft">
-        If something went wrong, it helps to include your iPhone model, your iOS version, the
-        version of Paulo from Settings, and what you were doing when it happened. Please don’t send
-        photos of your children — we don’t need them, and we’d rather they stayed on your device.
-      </p>
-    </section>
-  </div>
+        <div class="support-report card">
+          <h3 class="title">Reporting a problem</h3>
+          <p>
+            It helps to include your iPhone model, your iOS version, the version of Paulo (in the
+            grown-ups’ pages) and what you were doing when it happened. The <em>Send feedback</em> row
+            in Paulo prepares this for you, and shows you everything before you send it.
+          </p>
+          <p>
+            Please don’t send photos of your children. We don’t need them, and we’d rather they stayed
+            on your device.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
 </BaseLayout>
+
+<style>
+  .support-art {
+    position: relative;
+    width: min(70%, 280px);
+  }
+
+  .support-art :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+    filter: drop-shadow(0 20px 26px rgb(32 48 60 / 0.16));
+  }
+
+  .support-bubble {
+    position: absolute;
+    left: -20%;
+    top: 0;
+    padding: 12px 18px;
+    border-radius: 20px;
+    background: var(--color-card);
+    font-size: 18px;
+    font-weight: 560;
+    rotate: -5deg;
+    box-shadow: 0 8px 20px rgb(32 48 60 / 0.1);
+    animation: enter-pop 1000ms var(--spring-bouncy) 700ms both;
+  }
+
+  .support {
+    padding-top: 0;
+  }
+
+  .support-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: clamp(32px, 5vw, 72px);
+    align-items: start;
+  }
+
+  /* Phones: the group list is a row of pills; a sticky sidebar from 900px. */
+  .support-toc ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 16px;
+  }
+
+  .support-toc a {
+    display: flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 0 14px;
+    border-radius: 999px;
+    background: var(--color-card);
+    font-weight: 700;
+    color: var(--color-ink-soft);
+    transition: background-color 200ms ease, color 200ms ease;
+  }
+
+  .support-toc a:hover {
+    background: var(--color-card);
+    color: var(--color-ink);
+  }
+
+  .support-groups {
+    display: grid;
+    gap: 48px;
+  }
+
+  .support-h {
+    margin-bottom: 16px;
+    font-size: 13px;
+    font-family: var(--font-rounded);
+    font-weight: 800;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-ink-soft);
+  }
+
+  .support-report {
+    padding: clamp(24px, 3vw, 36px);
+  }
+
+  .support-report p {
+    margin-top: 12px;
+    color: var(--color-ink-soft);
+    max-width: 42em;
+  }
+
+  @media (min-width: 900px) {
+    .support-grid {
+      grid-template-columns: 260px minmax(0, 1fr);
+    }
+
+    .support-toc {
+      position: sticky;
+      top: 100px;
+    }
+
+    .support-toc ul {
+      display: grid;
+      gap: 2px;
+    }
+
+    .support-toc a {
+      border-radius: 14px;
+      background: none;
+    }
+
+    .support-art {
+      width: min(100%, 360px);
+    }
+
+    .support-bubble {
+      left: -10%;
+    }
+  }
+</style>

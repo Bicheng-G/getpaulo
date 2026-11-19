@@ -6,8 +6,8 @@ export const SITE = {
   name: 'Paulo',
   domain: 'getpaulo.app',
   url: 'https://getpaulo.app',
-  /** App Store subtitle, from docs/release/testflight-app-store-metadata.md */
-  tagline: 'Real wishes, real choices, real promises',
+  /** App Store subtitle (Paulo/docs/release/app-store/metadata/app-info/en-GB.json) */
+  tagline: 'Wishes worth waiting for',
   supportEmail: 'hello@goodstuffstudio.app',
 } as const;
 
@@ -28,3 +28,11 @@ export const APP_STORE_ID: string | null = null;
 export const APP_STORE_URL = APP_STORE_ID
   ? `https://apps.apple.com/app/id${APP_STORE_ID}?ct=website&pt=&mt=8`
   : null;
+
+/** Primary navigation, in reading order. */
+export const NAV = [
+  { href: '/how-it-works', label: 'How it works' },
+  { href: '/story', label: 'Our story' },
+  { href: '/pricing', label: 'Pricing' },
+  { href: '/support', label: 'Support' },
+] as const;

@@ -1,0 +1,176 @@
+---
+/**
+ * The 30-second App Store preview film, in a dialog. Mounted once per page by
+ * BaseLayout; any [data-film-open] button opens it. The file is self-hosted
+ * (CSP media-src 'self') and only loads when the dialog opens.
+ */
+---
+
+<dialog id="film" class="film" aria-label="Paulo in 30 seconds">
+  <div class="film-inner">
+    <video
+      class="film-video"
+      controls
+      playsinline
+      preload="none"
+      poster="/media/paulo-film-poster.jpg"
+      width="720"
+      height="1560"
+    >
+      <source src="/media/paulo-film.mp4" type="video/mp4" />
+    </video>
+    <button type="button" class="film-close" data-film-close aria-label="Close the film">
+      <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 3l10 10M13 3L3 13" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"></path></svg>
+    </button>
+    <p class="film-credit">
+      Sound effects by junggle, original_sound, Ch0cchi and daalvinz on Freesound, CC BY.
+    </p>
+  </div>
+</dialog>
+
+<style>
+  .film {
+    margin: auto;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    max-width: none;
+    max-height: none;
+    overflow: visible;
+    color: var(--color-cta-label);
+  }
+
+  .film::backdrop {
+    background: rgb(28 25 21 / 0.72);
+    backdrop-filter: blur(6px);
+  }
+
+  .film[open] .film-inner {
+    animation: film-in 600ms var(--spring-soft) both;
+  }
+
+  .film[open]::backdrop {
+    animation: film-fade 240ms ease-out both;
+  }
+
+  .film.is-closing .film-inner {
+    animation: film-out 180ms var(--ease-out) both;
+  }
+
+  .film.is-closing::backdrop {
+    animation: film-fade 180ms ease-out reverse both;
+  }
+
+  @keyframes film-in {
+    from {
+      opacity: 0;
+      transform: translateY(24px) scale(0.94);
+    }
+  }
+
+  @keyframes film-out {
+    to {
+      opacity: 0;
+      transform: translateY(12px) scale(0.97);
+    }
+  }
+
+  @keyframes film-fade {
+    from {
+      opacity: 0;
+    }
+  }
+
+  .film-inner {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .film-video {
+    display: block;
+    height: min(82dvh, 760px);
+    width: auto;
+    aspect-ratio: 720 / 1560;
+    max-width: calc(100vw - 32px);
+    border-radius: 28px;
+    background: var(--color-paper);
+    box-shadow: 0 30px 80px rgb(0 0 0 / 0.35);
+  }
+
+  .film-close {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 999px;
+    border: 0;
+    background: var(--color-card);
+    color: var(--color-ink);
+    box-shadow: 0 4px 0 #d9d3c7, 0 8px 18px rgb(0 0 0 / 0.2);
+    transition: transform 160ms var(--ease-out);
+  }
+
+  .film-close:active {
+    transform: translateY(3px) scale(0.97);
+  }
+
+  .film-credit {
+    font-size: 12px;
+    opacity: 0.6;
+    max-width: 36ch;
+    text-align: center;
+  }
+
+  @media (min-width: 600px) {
+    .film-close {
+      top: -14px;
+      right: -14px;
+    }
+  }
+</style>
+
+<script>
+  const dialog = document.getElementById('film') as HTMLDialogElement | null;
+  const video = dialog?.querySelector('video');
+
+  if (dialog && video) {
+    const close = () => {
+      if (!dialog.open || dialog.classList.contains('is-closing')) return;
+      video.pause();
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        dialog.close();
+        return;
+      }
+      dialog.classList.add('is-closing');
+      setTimeout(() => {
+        dialog.classList.remove('is-closing');
+        dialog.close();
+      }, 180);
+    };
+
+    document.querySelectorAll('[data-film-open]').forEach((btn) =>
+      btn.addEventListener('click', () => {
+        dialog.showModal();
+        video.currentTime = 0;
+        video.play().catch(() => {
+          /* autoplay with sound can be refused; the controls are there */
+        });
+      }),
+    );
+
+    dialog.querySelector('[data-film-close]')?.addEventListener('click', close);
+    dialog.addEventListener('cancel', (e) => {
+      e.preventDefault();
+      close();
+    });
+    dialog.addEventListener('click', (e) => {
+      if (e.target === dialog) close();
+    });
+  }
+</script>

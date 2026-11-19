@@ -1,0 +1,121 @@
+---
+/** What Paulo refuses to be. Each pill is struck through by hand when the section arrives. */
+const nots = [
+  'Reward charts',
+  'Points for chores',
+  'Scores and labels',
+  'Sibling leaderboards',
+  'Streaks',
+  '“Are you sure?” guilt',
+  'Ads',
+  'Endless screen time',
+];
+---
+
+<section class="nots section-pad" aria-labelledby="nots-title" data-nots>
+  <div class="wrap nots-inner">
+    <p class="eyebrow">What Paulo isn’t</p>
+    <h2 id="nots-title" class="headline">
+      A small scaffold, <span class="accent">then out of the way.</span>
+    </h2>
+    <p class="lede nots-lede">
+      Most tools for this moment either say no for you or train children with points. Paulo does
+      neither. A healthy Paulo family might open it twice a week, and each time a real choice
+      happens.
+    </p>
+
+    <ul class="nots-list" aria-label="Things Paulo never does">
+      {
+        nots.map((n, i) => (
+          <li class="not" style={`--i:${i}; --r:${((i * 37) % 9) - 4}deg`}>
+            <span>{n}</span>
+            <span class="not-strike" aria-hidden="true" />
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+
+<style is:global>
+  .nots-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .nots-inner h2 {
+    margin-top: 16px;
+    max-width: 14em;
+  }
+
+  .nots-lede {
+    margin-top: 22px;
+    max-width: 34em;
+  }
+
+  .nots-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 14px;
+    max-width: 860px;
+    margin-top: clamp(36px, 5vw, 56px);
+  }
+
+  .not {
+    position: relative;
+    padding: 12px 22px;
+    border-radius: 999px;
+    background: var(--color-card);
+    font-size: clamp(16px, 1.6vw, 19px);
+    font-weight: 700;
+    color: var(--color-ink-soft);
+    rotate: var(--r);
+    box-shadow:
+      0 1px 2px rgb(32 48 60 / 0.05),
+      0 4px 12px rgb(32 48 60 / 0.06);
+    transition: rotate 500ms var(--spring-bouncy), scale 500ms var(--spring-bouncy);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .not:hover {
+      rotate: calc(var(--r) * -1.5);
+      scale: 1.05;
+    }
+  }
+
+  /* A hand-drawn-ish strike: a slightly tilted clay-red line. */
+  .not-strike {
+    position: absolute;
+    left: 14px;
+    right: 14px;
+    top: 52%;
+    height: 3px;
+    border-radius: 3px;
+    background: var(--color-cta);
+    rotate: -2.5deg;
+    transform-origin: left center;
+  }
+
+  .nots-ready .not-strike {
+    transform: scaleX(0);
+  }
+
+  .nots-ready.is-on .not-strike {
+    transform: none;
+    transition: transform 420ms var(--ease-in-out);
+    transition-delay: calc(200ms + var(--i) * 110ms);
+  }
+</style>
+
+<script>
+  import { onceInView, reduced } from '../../scripts/motion';
+
+  document.querySelectorAll<HTMLElement>('[data-nots]').forEach((el) => {
+    if (reduced()) return;
+    el.classList.add('nots-ready');
+    onceInView(el.querySelector('.nots-list')!, () => el.classList.add('is-on'));
+  });
+</script>

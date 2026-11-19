@@ -7,32 +7,150 @@ interface Props {
   lede?: string;
   /** Small line under the title, e.g. "Last updated 30 July 2026". */
   meta?: string;
+  /** h2 headings of the document, for the contents list. */
+  headings?: { depth: number; slug: string; text: string }[];
 }
 
-const { title, description, lede, meta } = Astro.props;
+const { title, description, lede, meta, headings = [] } = Astro.props;
+const toc = headings.filter((h) => h.depth === 2);
 ---
 
 <BaseLayout title={title} description={description}>
-  <article class="mx-auto w-full max-w-2xl px-6 pt-6 pb-4">
-    <header class="mb-10">
-      <h1 class="font-serif text-4xl leading-tight font-semibold sm:text-[2.6rem]">
-        {title}
-      </h1>
-      {lede && <p class="mt-4 text-lg leading-relaxed text-ink-soft">{lede}</p>}
-      {meta && <p class="mt-3 text-sm text-ink-faint">{meta}</p>}
+  <article class="wrap prose-page">
+    <header class="prose-head">
+      <h1 class="display prose-title" data-enter style="--i:0">{title}</h1>
+      {lede && <p class="lede prose-lede" data-enter style="--i:1">{lede}</p>}
+      {meta && <p class="prose-meta" data-enter style="--i:2">{meta}</p>}
     </header>
 
-    <div
-      class="prose prose-lg max-w-none
-        prose-headings:font-serif prose-headings:font-semibold prose-headings:text-ink
-        prose-h2:mt-12 prose-h2:mb-4 prose-h2:text-2xl
-        prose-h3:mt-8 prose-h3:mb-3 prose-h3:text-xl
-        prose-p:text-ink prose-p:leading-relaxed
-        prose-li:text-ink prose-li:leading-relaxed
-        prose-strong:text-ink prose-strong:font-semibold
-        prose-a:text-cta prose-a:underline-offset-2 hover:prose-a:text-ink"
-    >
-      <slot />
+    {Astro.slots.has('summary') && <div class="prose-summary" data-enter style="--i:3"><slot name="summary" /></div>}
+
+    <div class:list={['prose-body', toc.length > 0 && 'has-toc']}>
+      {
+        toc.length > 0 && (
+          <nav class="prose-toc" aria-label="Contents">
+            <p class="prose-toc-h">Contents</p>
+            <ol>
+              {toc.map((h) => (
+                <li>
+                  <a href={`#${h.slug}`}>{h.text}</a>
+                </li>
+              ))}
+            </ol>
+          </nav>
+        )
+      }
+
+      <div
+        class="prose prose-lg max-w-none
+          prose-headings:font-serif prose-headings:font-semibold prose-headings:text-ink
+          prose-h2:mt-14 prose-h2:mb-4 prose-h2:text-[1.75rem]
+          prose-h3:mt-8 prose-h3:mb-3 prose-h3:text-xl
+          prose-p:text-ink prose-p:leading-relaxed
+          prose-li:text-ink prose-li:leading-relaxed
+          prose-strong:text-ink prose-strong:font-bold
+          prose-code:text-[0.85em] prose-code:font-medium prose-code:before:content-none prose-code:after:content-none
+          prose-a:text-cta prose-a:underline-offset-2 hover:prose-a:text-ink"
+      >
+        <slot />
+      </div>
     </div>
   </article>
 </BaseLayout>
+
+<style>
+  .prose-page {
+    padding-top: clamp(32px, 6vw, 72px);
+    padding-bottom: clamp(56px, 8vw, 104px);
+  }
+
+  .prose-head {
+    max-width: 800px;
+  }
+
+  .prose-title {
+    font-size: clamp(2.6rem, 6vw, 4.6rem);
+  }
+
+  .prose-lede {
+    margin-top: 18px;
+  }
+
+  .prose-meta {
+    margin-top: 14px;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--color-ink-soft);
+  }
+
+  .prose-summary {
+    margin-top: clamp(32px, 4vw, 48px);
+  }
+
+  .prose-body {
+    margin-top: clamp(40px, 5vw, 64px);
+    max-width: 760px;
+  }
+
+  .prose-body.has-toc {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: clamp(32px, 5vw, 72px);
+    max-width: none;
+    align-items: start;
+  }
+
+  .prose-toc {
+    padding: 18px;
+    border-radius: 22px;
+    background: var(--color-card);
+  }
+
+  .prose-toc-h {
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-ink-soft);
+  }
+
+  .prose-toc ol {
+    display: grid;
+    gap: 2px;
+    margin-top: 12px;
+  }
+
+  .prose-toc a {
+    display: block;
+    padding: 11px 12px;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 600;
+    line-height: 1.3;
+    color: var(--color-ink-soft);
+    transition: background-color 200ms ease, color 200ms ease;
+  }
+
+  .prose-toc a:hover {
+    background: var(--color-card);
+    color: var(--color-ink);
+  }
+
+  @media (min-width: 900px) {
+    .prose-body.has-toc {
+      grid-template-columns: 240px minmax(0, 720px);
+    }
+
+    .prose-toc {
+      position: sticky;
+      top: 100px;
+      padding: 0;
+      border-radius: 0;
+      background: none;
+    }
+
+    .prose-toc a {
+      padding-block: 7px;
+    }
+  }
+</style>

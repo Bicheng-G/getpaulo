@@ -1,0 +1,318 @@
+---
+import { Image } from 'astro:assets';
+import arcade from '../../assets/clay/TemptationArcade.png';
+
+const bubbles = [
+  { text: 'Pleeease?', x: -6, y: 8, r: -6 },
+  { text: 'Just one more!', x: 64, y: 2, r: 5 },
+  { text: 'Why not?', x: 74, y: 40, r: 7 },
+  { text: 'Now?', x: -10, y: 50, r: -4 },
+  { text: 'Pretty please?', x: 2, y: 82, r: 4 },
+  { text: 'Just this once!', x: 58, y: 80, r: -5 },
+];
+---
+
+<section class="want section-pad" id="moment" aria-labelledby="want-title" data-want>
+  <div class="wrap want-grid">
+    <div class="want-copy">
+      <p class="eyebrow">The moment</p>
+      <h2 id="want-title" class="headline">
+        Every parent knows <span class="accent">“I&nbsp;want&nbsp;it!”</span>
+      </h2>
+      <p class="lede">
+        A claw machine at the shopping centre. A toy at the checkout. Then comes the negotiation:
+        the fifth “why not?”, a deal nobody remembers by Thursday.
+      </p>
+      <p class="want-body">
+        Paulo doesn’t say no for you, and it doesn’t pick for your child. It gives the moment a
+        shape: a calm pause, two honest choices, and a promise the whole family can see.
+      </p>
+      <a href="#try" class="btn btn-primary want-cta" data-handover>
+        Hand over the phone
+        <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 2v11m0 0l-4.5-4.5M8 13l4.5-4.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+      </a>
+    </div>
+
+    <div class="want-stage" data-want-stage>
+      <button type="button" class="want-machine" data-want-more aria-label="Ask again (adds another speech bubble)">
+        <span class="want-shout serif">I want it!</span>
+        <Image src={arcade} alt="" width={420} class="want-arcade" />
+      </button>
+      {
+        bubbles.map((b, i) => (
+          <span
+            class="bubble"
+            data-bubble
+            aria-hidden="true"
+            style={`--x:${b.x}%; --y:${b.y}%; --r:${b.r}deg; --i:${i}`}
+          >
+            {b.text}
+          </span>
+        ))
+      }
+      <p class="want-calm serif" data-want-calm hidden>Okay, okay. There’s a calmer way.</p>
+    </div>
+  </div>
+</section>
+
+<style is:global>
+  .want-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    align-items: center;
+    gap: clamp(40px, 6vw, 96px);
+  }
+
+  .want-copy h2 {
+    margin-top: 16px;
+  }
+
+  .want-copy .lede {
+    margin-top: 24px;
+    max-width: 28em;
+  }
+
+  .want-body {
+    margin-top: 16px;
+    max-width: 30em;
+    color: var(--color-ink-soft);
+  }
+
+  .want-cta {
+    margin-top: 32px;
+    width: 100%;
+  }
+
+  .want-stage {
+    position: relative;
+    aspect-ratio: 1 / 1.05;
+    width: 100%;
+    max-width: 560px;
+    justify-self: center;
+    margin-top: 24px;
+  }
+
+  .want-machine {
+    position: absolute;
+    left: 50%;
+    top: 52%;
+    width: 52%;
+    translate: -50% -50%;
+    border: 0;
+    background: none;
+    padding: 0;
+    border-radius: 40px;
+    transition: transform 160ms var(--ease-out);
+  }
+
+  .want-machine:active {
+    transform: scale(0.96);
+  }
+
+  .want-machine .want-arcade {
+    display: block;
+    width: 100%;
+    height: auto;
+    filter: drop-shadow(0 18px 22px rgb(32 48 60 / 0.18));
+  }
+
+  .want-shout {
+    position: absolute;
+    z-index: 2;
+    left: 50%;
+    top: -16%;
+    translate: -50% 0;
+    rotate: -4deg;
+    padding: 0.3em 0.75em 0.4em;
+    border-radius: 22px;
+    background: var(--color-card);
+    font-size: clamp(26px, 3.4vw, 40px);
+    font-weight: 620;
+    color: var(--color-cta);
+    white-space: nowrap;
+    box-shadow:
+      0 2px 4px rgb(32 48 60 / 0.06),
+      0 10px 24px rgb(32 48 60 / 0.1);
+  }
+
+  .want-shout::after {
+    content: '';
+    position: absolute;
+    left: 46%;
+    bottom: -10px;
+    width: 22px;
+    height: 22px;
+    background: var(--color-card);
+    border-radius: 4px;
+    rotate: 45deg;
+    z-index: -1;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .want-machine:hover .want-shout {
+      animation: wobble 520ms var(--ease-out);
+    }
+  }
+
+  @keyframes wobble {
+    25% {
+      rotate: 2deg;
+    }
+    55% {
+      rotate: -7deg;
+    }
+    80% {
+      rotate: -2deg;
+    }
+  }
+
+  .bubble {
+    position: absolute;
+    left: var(--x);
+    top: var(--y);
+    rotate: var(--r);
+    padding: 0.5em 1em 0.55em;
+    border-radius: 18px;
+    background: var(--color-card);
+    font-family: var(--font-serif);
+    font-variation-settings: 'SOFT' 100, 'WONK' 0;
+    font-size: 15px;
+    font-weight: 560;
+    white-space: nowrap;
+    color: var(--color-ink);
+    box-shadow:
+      0 1px 2px rgb(32 48 60 / 0.05),
+      0 6px 16px rgb(32 48 60 / 0.08);
+    pointer-events: none;
+  }
+
+  /* Before the section is reached the bubbles wait, unseen; the script lets
+     them out once. Without the script they are simply there. */
+  .want-ready .bubble {
+    opacity: 0;
+    transform: translateY(14px) scale(0.6);
+  }
+
+  .want-ready.is-on .bubble {
+    opacity: 1;
+    transform: none;
+    transition:
+      opacity 260ms var(--ease-out),
+      transform 900ms var(--spring-bouncy);
+    transition-delay: calc(var(--i) * 140ms);
+  }
+
+  .bubble.is-extra {
+    animation: bubble-pop 900ms var(--spring-bouncy) both;
+  }
+
+  .bubble.is-gone {
+    transition:
+      opacity 300ms ease,
+      transform 420ms var(--ease-out) !important;
+    transition-delay: calc(var(--k, 0) * 30ms) !important;
+    opacity: 0 !important;
+    transform: scale(0.7) translateY(10px) !important;
+  }
+
+  @keyframes bubble-pop {
+    from {
+      opacity: 0;
+      transform: translateY(14px) scale(0.5);
+    }
+  }
+
+  .want-calm {
+    position: absolute;
+    left: 50%;
+    bottom: -4%;
+    translate: -50% 0;
+    width: max-content;
+    max-width: 100%;
+    font-size: 22px;
+    font-style: italic;
+    color: var(--color-ink-soft);
+    animation: enter-fade 500ms var(--ease-out) both;
+  }
+
+  @media (min-width: 600px) {
+    .want-stage {
+      aspect-ratio: 1 / 0.95;
+    }
+
+    .bubble {
+      font-size: clamp(16px, 1.7vw, 21px);
+    }
+
+    .want-cta {
+      width: auto;
+    }
+  }
+
+  @media (min-width: 900px) {
+    .want-grid {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    }
+
+    .want-stage {
+      margin-top: 0;
+    }
+  }
+</style>
+
+<script>
+  import { onceInView, reduced } from '../../scripts/motion';
+
+  const EXTRA = [
+    'But whyyy?',
+    'You said!',
+    'I’ll be good!',
+    'Everyone has one!',
+    'Just a little one?',
+    'Pleeeeease?',
+    'I really really want it!',
+  ];
+
+  document.querySelectorAll<HTMLElement>('[data-want]').forEach((section) => {
+    const stage = section.querySelector<HTMLElement>('[data-want-stage]')!;
+    const more = section.querySelector<HTMLButtonElement>('[data-want-more]')!;
+    const calm = section.querySelector<HTMLElement>('[data-want-calm]')!;
+    let extras: HTMLElement[] = [];
+    let n = 0;
+
+    if (!reduced()) {
+      stage.classList.add('want-ready');
+      onceInView(stage, () => stage.classList.add('is-on'));
+    }
+
+    more.addEventListener('click', () => {
+      if (extras.length >= 7) {
+        // Enough. Every bubble deflates and the calm line takes over.
+        const all = [...stage.querySelectorAll<HTMLElement>('[data-bubble]')];
+        all.forEach((b, k) => {
+          b.style.setProperty('--k', String(k));
+          b.classList.add('is-gone');
+        });
+        calm.hidden = false;
+        setTimeout(() => {
+          extras.forEach((b) => b.remove());
+          extras = [];
+          all.forEach((b) => b.classList.remove('is-gone'));
+        }, 2600);
+        setTimeout(() => (calm.hidden = true), 2600);
+        return;
+      }
+      const b = document.createElement('span');
+      b.className = 'bubble is-extra';
+      b.dataset.bubble = '';
+      b.setAttribute('aria-hidden', 'true');
+      b.textContent = EXTRA[n++ % EXTRA.length];
+      const angle = Math.random() * Math.PI * 2;
+      const x = 50 + Math.cos(angle) * (30 + Math.random() * 14) - 14;
+      const y = 50 + Math.sin(angle) * (34 + Math.random() * 10) - 6;
+      b.style.cssText = `--x:${x.toFixed(1)}%; --y:${y.toFixed(1)}%; --r:${(Math.random() * 14 - 7).toFixed(1)}deg; --i:0; z-index:${2 + extras.length}`;
+      stage.appendChild(b);
+      extras.push(b);
+    });
+  });
+</script>

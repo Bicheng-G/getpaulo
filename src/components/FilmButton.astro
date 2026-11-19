@@ -1,0 +1,73 @@
+---
+/** Opens the 30-second film (FilmDialog, mounted once in BaseLayout). */
+interface Props {
+  tone?: 'paper' | 'ghost' | 'ghost-dark';
+  class?: string;
+}
+const { tone = 'paper', class: extra } = Astro.props;
+---
+
+<button
+  type="button"
+  data-film-open
+  class:list={['btn film-btn', { paper: 'btn-paper', ghost: 'btn-film-ghost', 'ghost-dark': 'btn-film-dark' }[tone], extra]}
+  aria-haspopup="dialog"
+>
+  <span class="film-play" aria-hidden="true">
+    <svg width="12" height="12" viewBox="0 0 12 12"><path d="M3 1.6v8.8L10.4 6z" fill="currentColor"></path></svg>
+  </span>
+  Watch the film <span class="film-time">0:30</span>
+</button>
+
+<style>
+  .film-btn {
+    padding-left: 0.6em;
+  }
+
+  .film-play {
+    display: grid;
+    place-items: center;
+    width: 38px;
+    height: 38px;
+    border-radius: 999px;
+    background: var(--color-cta);
+    color: var(--color-cta-label);
+    padding-left: 2px;
+    transition: transform 400ms var(--spring-bouncy);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .film-btn:hover .film-play {
+      transform: scale(1.1) rotate(-8deg);
+    }
+  }
+
+  .film-time {
+    font-weight: 700;
+    color: var(--color-ink-soft);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .btn-film-ghost {
+    background: transparent;
+    color: var(--color-ink);
+    box-shadow: none;
+    padding-right: 0.6em;
+  }
+
+  .btn-film-ghost:hover,
+  .btn-film-ghost:active {
+    box-shadow: none !important;
+  }
+
+  .btn-film-dark {
+    --edge: #000;
+    background: rgb(255 244 230 / 0.1);
+    color: var(--color-cta-label);
+    box-shadow: inset 0 0 0 1.5px rgb(255 244 230 / 0.25);
+  }
+
+  .btn-film-dark .film-time {
+    color: rgb(255 244 230 / 0.6);
+  }
+</style>

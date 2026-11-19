@@ -1,35 +1,35 @@
 ---
-import { SITE, APP_STORE_ID } from '../config';
+import { Image } from 'astro:assets';
+import { SITE, APP_STORE_ID, NAV } from '../config';
+import GetPaulo from '../components/GetPaulo.astro';
+import FilmDialog from '../components/FilmDialog.astro';
+import appIcon from '../assets/ui/app-icon.png';
 import '../styles/global.css';
 
 interface Props {
   title: string;
   description: string;
-  /** Set false on pages that supply their own full-bleed background. */
+  /** Pages with their own background (a dark band at the top, say) can switch the dots off. */
   dotGrid?: boolean;
 }
 
 const { title, description, dotGrid = true } = Astro.props;
 const fullTitle = title === SITE.name ? `${SITE.name} — ${SITE.tagline}` : `${title} · ${SITE.name}`;
 const canonical = new URL(Astro.url.pathname, Astro.site);
-
-const nav = [
-  { href: '/', label: 'Home' },
-  { href: '/support', label: 'Support' },
-  { href: '/privacy', label: 'Privacy' },
-];
 const path = Astro.url.pathname.replace(/\/$/, '') || '/';
+const year = new Date().getFullYear();
 ---
 
 <!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="preload" href="/fonts/fraunces-vf.woff2" as="font" type="font/woff2" crossorigin />
     <meta name="theme-color" content="#F3F1EC" />
 
     <meta property="og:type" content="website" />
@@ -39,90 +39,391 @@ const path = Astro.url.pathname.replace(/\/$/, '') || '/';
     <meta property="og:url" content={canonical} />
     <meta name="twitter:card" content="summary_large_image" />
 
-    {/* iOS Safari Smart App Banner — no JavaScript, and it becomes an "Open"
-        button once the app is installed. Only emitted when the app exists. */}
+    {/* iOS Smart App Banner — emitted only once the app exists. */}
     {APP_STORE_ID && <meta name="apple-itunes-app" content={`app-id=${APP_STORE_ID}`} />}
   </head>
 
   <body class:list={[dotGrid && 'dot-grid', 'min-h-dvh flex flex-col']}>
-    <a
-      href="#main"
-      class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:rounded-full focus:bg-cta focus:px-5 focus:py-3 focus:text-cta-label"
-    >
-      Skip to content
-    </a>
+    <a href="#main" class="skip">Skip to content</a>
 
-    <header class="mx-auto w-full max-w-5xl px-6 py-6 sm:py-8">
-      <nav class="flex flex-wrap items-center justify-between gap-4" aria-label="Primary">
-        <a href="/" class="group flex items-center gap-2.5" aria-label={`${SITE.name} home`}>
-          <svg
-            width="26"
-            height="26"
-            viewBox="0 0 24 24"
-            fill="none"
-            aria-hidden="true"
-            class="shrink-0"
-          >
-            <path
-              d="M12 2.6l2.6 5.6 6.1.8-4.5 4.2 1.2 6-5.4-3-5.4 3 1.2-6L3.3 9l6.1-.8L12 2.6z"
-              fill="var(--color-star)"
-              stroke="var(--color-star-deep)"
-              stroke-width="1.1"
-              stroke-linejoin="round"></path>
-          </svg>
-          <span class="font-serif text-2xl font-semibold tracking-tight">{SITE.name}</span>
+    <header class="site-header" data-header>
+      <nav class="wrap nav" aria-label="Primary">
+        <a href="/" class="brand" aria-label={`${SITE.name} home`}>
+          <Image src={appIcon} alt="" width={40} height={40} class="brand-icon" loading="eager" />
+          <span class="brand-word">{SITE.name}</span>
         </a>
 
-        <ul class="flex items-center gap-1 text-[15px] font-medium">
+        <ul class="nav-links">
           {
-            nav.map((item) => (
+            NAV.map((item) => (
               <li>
-                <a
-                  href={item.href}
-                  aria-current={path === item.href ? 'page' : undefined}
-                  class:list={[
-                    'rounded-full px-3.5 py-2 transition-colors duration-200',
-                    path === item.href
-                      ? 'bg-card text-ink surface-resting'
-                      : 'text-ink-soft hover:text-ink',
-                  ]}
-                >
+                <a href={item.href} aria-current={path === item.href ? 'page' : undefined}>
                   {item.label}
                 </a>
               </li>
             ))
           }
         </ul>
+
+        <div class="nav-end">
+          <GetPaulo size="sm" class="nav-cta" />
+          <button
+            type="button"
+            class="menu-btn"
+            aria-expanded="false"
+            aria-controls="menu"
+            data-menu-toggle
+          >
+            <span class="sr-only">Menu</span>
+            <span class="menu-lines" aria-hidden="true"><span></span><span></span></span>
+          </button>
+        </div>
       </nav>
+
     </header>
+
+    <div id="menu" class="menu" data-menu hidden>
+      <ul>
+        <li style="--i:0"><a href="/" aria-current={path === '/' ? 'page' : undefined}>Home</a></li>
+        {
+          NAV.map((item, i) => (
+            <li style={`--i:${i + 1}`}>
+              <a href={item.href} aria-current={path === item.href ? 'page' : undefined}>
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+      <div class="menu-cta" style={`--i:${NAV.length + 1}`}><GetPaulo /></div>
+    </div>
 
     <main id="main" class="flex-1">
       <slot />
     </main>
 
-    <footer class="mx-auto w-full max-w-5xl px-6 pt-16 pb-12">
-      <div class="border-t border-ink/10 pt-8">
-        <div class="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
-          <div class="max-w-sm">
-            <p class="font-serif text-lg text-ink">{SITE.name}</p>
-            <p class="mt-1.5 text-sm leading-relaxed text-ink-soft">{SITE.tagline}</p>
+    <footer class="site-footer">
+      <div class="wrap">
+        <div class="footer-top">
+          <div class="footer-brand">
+            <a href="/" class="brand" aria-label={`${SITE.name} home`}>
+              <Image src={appIcon} alt="" width={40} height={40} class="brand-icon" />
+              <span class="brand-word">{SITE.name}</span>
+            </a>
+            <p class="footer-line">Wishes worth waiting for. An iPhone app for families with children aged 4–8.</p>
           </div>
 
-          <ul class="flex flex-col gap-2 text-sm text-ink-soft">
-            <li><a class="hover:text-ink" href="/support">Support</a></li>
-            <li><a class="hover:text-ink" href="/privacy">Privacy Policy</a></li>
-            <li>
-              <a class="hover:text-ink" href={`mailto:${SITE.supportEmail}`}>
-                {SITE.supportEmail}
-              </a>
-            </li>
-          </ul>
+          <div class="footer-cols">
+            <ul>
+              <li class="footer-h">Paulo</li>
+              <li><a href="/how-it-works">How it works</a></li>
+              <li><a href="/story">Our story</a></li>
+              <li><a href="/pricing">Pricing</a></li>
+            </ul>
+            <ul>
+              <li class="footer-h">Help</li>
+              <li><a href="/support">Support</a></li>
+              <li><a href="/privacy">Privacy policy</a></li>
+              <li><a href={`mailto:${SITE.supportEmail}`}>{SITE.supportEmail}</a></li>
+            </ul>
+          </div>
         </div>
 
-        <p class="mt-10 text-[13px] leading-relaxed text-ink-faint">
-          This site uses no cookies, no analytics, and no trackers. Neither does the app.
-        </p>
+        <div class="footer-bottom">
+          <p>This site uses no cookies, no analytics and no trackers. Neither does the app.</p>
+          <p>The app speaks English, 简体中文, 繁體中文, 日本語 and Español. © {year} Paulo</p>
+        </div>
       </div>
     </footer>
+
+    <FilmDialog />
+
+    <script>
+      import '../scripts/nav';
+      import '../scripts/poke';
+    </script>
   </body>
 </html>
+
+<style>
+  .skip {
+    position: absolute;
+    left: 16px;
+    top: -80px;
+    z-index: 100;
+    padding: 12px 20px;
+    border-radius: 999px;
+    background: var(--color-cta);
+    color: var(--color-cta-label);
+    font-weight: 800;
+  }
+
+  .skip:focus {
+    top: 16px;
+  }
+
+  /* ---------- Header ---------- */
+
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    padding-top: env(safe-area-inset-top);
+    transition:
+      background-color 240ms ease,
+      box-shadow 240ms ease,
+      backdrop-filter 240ms ease;
+  }
+
+  .site-header.is-scrolled {
+    background-color: rgb(243 241 236 / 0.82);
+    backdrop-filter: saturate(1.4) blur(14px);
+    -webkit-backdrop-filter: saturate(1.4) blur(14px);
+    box-shadow: 0 1px 0 rgb(32 48 60 / 0.07);
+  }
+
+  .nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    height: 76px;
+  }
+
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+  }
+
+  .brand :global(.brand-icon) {
+    width: 38px;
+    height: 38px;
+    border-radius: 11px;
+    box-shadow: 0 2px 6px rgb(32 48 60 / 0.18);
+    transition: transform 500ms var(--spring-bouncy);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .brand:hover :global(.brand-icon) {
+      transform: rotate(-10deg) scale(1.08);
+    }
+  }
+
+  .brand-word {
+    font-family: var(--font-serif);
+    font-variation-settings: 'SOFT' 100, 'WONK' 0;
+    font-size: 27px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1;
+  }
+
+  /* Mobile-first: phones get the menu button; wide screens get inline links. */
+  .nav-links {
+    display: none;
+    gap: 4px;
+    font-size: 15.5px;
+    font-weight: 700;
+  }
+
+  .nav-links a {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 0 14px;
+    border-radius: 999px;
+    color: var(--color-ink-soft);
+    transition:
+      color 200ms ease,
+      background-color 200ms ease;
+  }
+
+  .nav-links a:hover {
+    color: var(--color-ink);
+    background-color: rgb(32 48 60 / 0.05);
+  }
+
+  .nav-links a[aria-current='page'] {
+    color: var(--color-ink);
+    background-color: var(--color-card);
+    box-shadow: 0 1px 2px rgb(32 48 60 / 0.06), 0 3px 8px rgb(32 48 60 / 0.05);
+  }
+
+  .nav-end {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .menu-btn {
+    display: grid;
+    width: 48px;
+    height: 48px;
+    border: 0;
+    border-radius: 999px;
+    background: var(--color-card);
+    box-shadow: 0 1px 2px rgb(32 48 60 / 0.06), 0 3px 8px rgb(32 48 60 / 0.06);
+    place-items: center;
+  }
+
+  .menu-lines {
+    display: grid;
+    gap: 6px;
+    width: 18px;
+  }
+
+  .menu-lines span {
+    display: block;
+    height: 2.2px;
+    border-radius: 2px;
+    background: var(--color-ink);
+    transition: transform 360ms var(--spring);
+  }
+
+  .menu-btn[aria-expanded='true'] .menu-lines span:first-child {
+    transform: translateY(4.1px) rotate(45deg);
+  }
+
+  .menu-btn[aria-expanded='true'] .menu-lines span:last-child {
+    transform: translateY(-4.1px) rotate(-45deg);
+  }
+
+  .menu {
+    position: fixed;
+    inset: 76px 0 0;
+    z-index: 49;
+    padding: 24px clamp(20px, 5vw, 48px) 40px;
+    background: var(--color-paper);
+    overflow-y: auto;
+  }
+
+  .menu ul {
+    display: grid;
+    gap: 4px;
+  }
+
+  .menu a {
+    display: block;
+    padding: 10px 0;
+    font-family: var(--font-serif);
+    font-variation-settings: 'SOFT' 100, 'WONK' 0;
+    font-size: 38px;
+    font-weight: 560;
+    letter-spacing: -0.02em;
+  }
+
+  .menu a[aria-current='page'] {
+    color: var(--color-cta);
+  }
+
+  .menu li,
+  .menu-cta {
+    animation: menu-in 520ms var(--spring-soft) both;
+    animation-delay: calc(var(--i) * 40ms);
+  }
+
+  .menu-cta {
+    margin-top: 28px;
+  }
+
+  @keyframes menu-in {
+    from {
+      opacity: 0;
+      transform: translateY(14px);
+    }
+  }
+
+  .nav-end :global(.nav-cta) {
+    display: none;
+  }
+
+  @media (min-width: 600px) {
+    .nav-end :global(.nav-cta) {
+      display: inline-flex;
+    }
+  }
+
+  @media (min-width: 900px) {
+    .nav-links {
+      display: flex;
+    }
+
+    .menu-btn {
+      display: none;
+    }
+  }
+
+  /* ---------- Footer ---------- */
+
+  .site-footer {
+    margin-top: 40px;
+    padding: 64px 0 calc(40px + env(safe-area-inset-bottom));
+    background: var(--color-paper-deep);
+    border-top: 1px solid rgb(32 48 60 / 0.06);
+  }
+
+  .footer-top {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 40px;
+  }
+
+  .footer-line {
+    margin-top: 14px;
+    max-width: 30ch;
+    color: var(--color-ink-soft);
+  }
+
+  /* Wraps to stacked lists on narrow phones instead of pushing the long
+     email address past the screen edge. */
+  .footer-cols {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px clamp(24px, 8vw, 96px);
+  }
+
+  .footer-cols ul {
+    display: grid;
+    gap: 2px;
+    align-content: start;
+    font-weight: 600;
+  }
+
+  .footer-cols a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 40px;
+    white-space: nowrap;
+    color: var(--color-ink-soft);
+    transition: color 200ms ease;
+  }
+
+  .footer-cols a:hover {
+    color: var(--color-ink);
+  }
+
+  .footer-h {
+    margin-bottom: 6px;
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-ink);
+  }
+
+  .footer-bottom {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 12px 32px;
+    margin-top: 56px;
+    padding-top: 24px;
+    border-top: 1px solid rgb(32 48 60 / 0.08);
+    font-size: 14px;
+    color: var(--color-ink-soft);
+  }
+</style>
