@@ -1,0 +1,85 @@
+---
+/**
+ * Hero for the inner pages: words on the left, one picture (slot "art") on the
+ * right. The pieces enter once on load, like the home hero.
+ */
+interface Props {
+  eyebrow: string;
+  id?: string;
+}
+const { eyebrow, id = 'page-title' } = Astro.props;
+const hasArt = Astro.slots.has('art');
+---
+
+<section class:list={['phero', !hasArt && 'phero-solo']} aria-labelledby={id}>
+  <div class="wrap phero-grid">
+    <div class="phero-copy">
+      <p class="eyebrow" data-enter style="--i:0">{eyebrow}</p>
+      <h1 id={id} class="display phero-title" data-enter style="--i:1"><slot name="title" /></h1>
+      <div class="lede phero-lede" data-enter style="--i:2"><slot name="lede" /></div>
+      {Astro.slots.has('actions') && <div class="phero-actions" data-enter style="--i:3"><slot name="actions" /></div>}
+    </div>
+    {hasArt && <div class="phero-art" data-enter style="--i:2"><slot name="art" /></div>}
+  </div>
+</section>
+
+<style>
+  .phero {
+    padding: clamp(32px, 6vw, 72px) 0 clamp(56px, 8vw, 104px);
+    overflow: clip;
+  }
+
+  .phero-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    align-items: center;
+    gap: clamp(32px, 5vw, 80px);
+  }
+
+  .phero-solo .phero-grid {
+    grid-template-columns: minmax(0, 1fr);
+    max-width: 900px;
+  }
+
+  .phero-title {
+    margin-top: 20px;
+    font-size: clamp(2.8rem, 6vw, 5.2rem);
+  }
+
+  .phero-lede {
+    margin-top: 24px;
+    max-width: 30em;
+  }
+
+  .phero-lede :global(p + p) {
+    margin-top: 12px;
+  }
+
+  .phero-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 14px 16px;
+    margin-top: 34px;
+  }
+
+  .phero-art {
+    position: relative;
+    display: grid;
+    place-items: center;
+  }
+
+  @media (min-width: 600px) {
+    .phero-actions {
+      flex-direction: row;
+      flex-wrap: wrap;
+      align-items: normal;
+    }
+  }
+
+  @media (min-width: 900px) {
+    .phero-grid {
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+    }
+  }
+</style>

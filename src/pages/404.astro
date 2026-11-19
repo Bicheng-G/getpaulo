@@ -1,53 +1,168 @@
 ---
+import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { SITE } from '../config';
+import gacha from '../assets/clay/TemptationGacha.png';
+import footprints from '../assets/clay/TrailFootprints.png';
 
 const destinations = [
-  { href: '/', label: 'Home', blurb: 'What Paulo is, and how a family uses it.' },
-  { href: '/support', label: 'Support', blurb: 'Common questions, and how to reach a real person.' },
-  { href: '/privacy', label: 'Privacy Policy', blurb: 'What stays on your device, in plain language.' },
+  { href: '/', label: 'Home', blurb: 'What Paulo is, and a Choice Moment to try.' },
+  { href: '/how-it-works', label: 'How it works', blurb: 'The loop, the five places, your part.' },
+  { href: '/support', label: 'Support', blurb: 'Common questions, and a real person.' },
 ];
 ---
 
-<BaseLayout
-  title="Page not found"
-  description="That page doesn’t exist. Links to the main pages on getpaulo.app."
->
-  <div class="mx-auto w-full max-w-2xl px-6 pt-6 pb-4">
-    <header class="mb-10">
-      <p class="font-serif text-lg text-ink-faint">404</p>
-      <h1 class="mt-2 font-serif text-4xl leading-tight font-semibold sm:text-[2.6rem]">
-        This page doesn’t exist
-      </h1>
-      <p class="mt-4 text-lg leading-relaxed text-ink-soft">
-        The link may be out of date, or there may be a typo in the address. Nothing is broken on
-        your end.
-      </p>
-    </header>
+<BaseLayout title="Page not found" description="That page doesn’t exist. Links to the main pages on getpaulo.app.">
+  <section class="nf">
+    <div class="wrap nf-grid">
+      <div class="nf-art">
+        <div class="nf-machine" data-poke tabindex="0" role="img" aria-label="A clay capsule machine" data-enter="pop" style="--i:0; --r:-10deg">
+          <Image src={gacha} alt="" width={340} loading="eager" />
+        </div>
+        <Image src={footprints} alt="" width={120} class="nf-feet" data-enter style="--i:3" />
+      </div>
 
-    <nav aria-label="Main pages">
-      <ul class="space-y-3">
-        {
-          destinations.map((item) => (
-            <li>
-              <a
-                href={item.href}
-                class="block rounded-[var(--radius-card)] bg-card p-6 surface-resting transition-transform duration-200 hover:scale-[1.01] active:scale-[0.99]"
-              >
-                <span class="font-serif text-xl font-semibold text-ink">{item.label}</span>
-                <span class="mt-1.5 block leading-relaxed text-ink-soft">{item.blurb}</span>
-              </a>
-            </li>
-          ))
-        }
-      </ul>
-    </nav>
-
-    <p class="mt-12 leading-relaxed text-ink-soft">
-      If you followed a link from somewhere on this site and landed here, we’d like to fix it —
-      <a class="underline underline-offset-4 hover:text-ink" href={`mailto:${SITE.supportEmail}`}>
-        {SITE.supportEmail}
-      </a>.
-    </p>
-  </div>
+      <div class="nf-copy">
+        <p class="eyebrow" data-enter style="--i:1">404</p>
+        <h1 class="display nf-title" data-enter style="--i:2">This wish <span class="accent">wandered off.</span></h1>
+        <p class="lede nf-lede" data-enter style="--i:3">
+          The link may be out of date, or there may be a typo in the address. Nothing is broken on your
+          end. Give the machine a poke, then pick a path:
+        </p>
+        <ul class="nf-links" data-enter style="--i:4">
+          {
+            destinations.map((d) => (
+              <li>
+                <a href={d.href} class="nf-link">
+                  <span class="nf-label serif">{d.label}</span>
+                  <span class="nf-blurb">{d.blurb}</span>
+                  <span class="nf-arrow" aria-hidden="true">→</span>
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+        <p class="nf-mail">
+          Followed a link from this site and landed here? Tell us at
+          <a class="link" href={`mailto:${SITE.supportEmail}`}>{SITE.supportEmail}</a> and we’ll fix it.
+        </p>
+      </div>
+    </div>
+  </section>
 </BaseLayout>
+
+<style>
+  .nf {
+    padding: clamp(32px, 6vw, 80px) 0 clamp(56px, 8vw, 104px);
+  }
+
+  .nf-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: clamp(32px, 6vw, 96px);
+    align-items: center;
+  }
+
+  .nf-art {
+    position: relative;
+    display: grid;
+    place-items: center;
+  }
+
+  .nf-machine {
+    width: min(60%, 240px);
+    filter: drop-shadow(0 22px 28px rgb(32 48 60 / 0.18));
+  }
+
+  .nf-machine :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .nf-art :global(.nf-feet) {
+    position: absolute;
+    right: 4%;
+    bottom: -6%;
+    width: 90px;
+    height: auto;
+    rotate: 24deg;
+    opacity: 0.8;
+  }
+
+  .nf-title {
+    margin-top: 16px;
+    font-size: clamp(2.8rem, 6vw, 5rem);
+  }
+
+  .nf-lede {
+    margin-top: 20px;
+    max-width: 30em;
+  }
+
+  .nf-links {
+    display: grid;
+    gap: 10px;
+    margin-top: 28px;
+    max-width: 560px;
+  }
+
+  .nf-link {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 2px 16px;
+    align-items: center;
+    padding: 18px 22px;
+    border-radius: 22px;
+    background: var(--color-card);
+    box-shadow: 0 1px 2px rgb(32 48 60 / 0.04), 0 4px 14px rgb(32 48 60 / 0.05);
+    transition: translate 300ms var(--ease-out), box-shadow 300ms ease;
+  }
+
+  .nf-link:hover {
+    translate: 0 -2px;
+    box-shadow: 0 2px 4px rgb(32 48 60 / 0.05), 0 12px 26px rgb(32 48 60 / 0.08);
+  }
+
+  .nf-link:active {
+    scale: 0.99;
+  }
+
+  .nf-label {
+    font-size: 21px;
+    font-weight: 600;
+  }
+
+  .nf-blurb {
+    grid-column: 1;
+    color: var(--color-ink-soft);
+    font-size: 15.5px;
+  }
+
+  .nf-arrow {
+    grid-row: 1 / span 2;
+    grid-column: 2;
+    font-size: 22px;
+    color: var(--color-cta);
+    transition: translate 300ms var(--spring);
+  }
+
+  .nf-link:hover .nf-arrow {
+    translate: 4px 0;
+  }
+
+  .nf-mail {
+    margin-top: 28px;
+    color: var(--color-ink-soft);
+  }
+
+  @media (min-width: 900px) {
+    .nf-grid {
+      grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+    }
+
+    .nf-machine {
+      width: min(100%, 340px);
+    }
+  }
+</style>

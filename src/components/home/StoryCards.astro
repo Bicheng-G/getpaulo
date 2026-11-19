@@ -1,0 +1,322 @@
+---
+/**
+ * How it works, as a picture book: each card is a clay scene from the app's own
+ * introduction; tap it and it flips over to the real screen for that step.
+ */
+import { Image } from 'astro:assets';
+import sceneMoment from '../../assets/clay/IntroMoment.jpg';
+import sceneHand from '../../assets/clay/IntroHandOver.jpg';
+import sceneEither from '../../assets/clay/IntroEitherAnswer.jpg';
+import sceneFollow from '../../assets/clay/IntroFollowThrough.jpg';
+import screenJar from '../../assets/screens/wishjar.png';
+import screenBreathe from '../../assets/screens/breathe.png';
+import screenChoice from '../../assets/screens/choice.png';
+import screenReady from '../../assets/screens/ready.png';
+
+const steps = [
+  {
+    title: 'Snap the wish',
+    body: 'Photograph the real thing. Paulo lifts it out as a sticker, right on your phone.',
+    scene: sceneMoment,
+    screen: screenJar,
+    back: 'The Wish Jar: things that caught my eye.',
+  },
+  {
+    title: 'Hand over the phone',
+    body: 'When “I want it!” comes, a grown-up opens Paulo and passes the phone. A breath first.',
+    scene: sceneHand,
+    screen: screenBreathe,
+    back: 'Breathe in, breathe out, with a calm little buddy.',
+  },
+  {
+    title: 'They choose',
+    body: 'Play now, or save for the wish. Both are okay, and Paulo shows what each one does.',
+    scene: sceneEither,
+    screen: screenChoice,
+    back: 'Two equal buttons. The path shows the stars still to go.',
+  },
+  {
+    title: 'Get it, together',
+    body: 'Enough stars? Pick the day. Only when it’s really in their hands is the wish come true.',
+    scene: sceneFollow,
+    screen: screenReady,
+    back: '“My Car is ready!” Then the family keeps its promise.',
+  },
+];
+---
+
+<section class="steps section-pad" id="how" aria-labelledby="steps-title">
+  <div class="wrap">
+    <div class="steps-head">
+      <div>
+        <p class="eyebrow">How it works</p>
+        <h2 id="steps-title" class="headline">Four steps, <span class="accent">one family promise.</span></h2>
+      </div>
+      <p class="lede steps-lede">
+        Each card is a scene from Paulo’s own story. Flip one over to see the real screen.
+      </p>
+    </div>
+
+    <ol class="steps-grid">
+      {
+        steps.map((s, i) => (
+          <li class="flip" style={`--i:${i}`}>
+            <button type="button" class="flip-btn" aria-pressed="false" data-flip>
+              <span class="sr-only">{`Step ${i + 1}: ${s.title}. Show the app screen.`}</span>
+              <span class="flip-inner" aria-hidden="true">
+                <span class="flip-face flip-front">
+                  <span class="flip-scene">
+                    <Image src={s.scene} alt="" widths={[320, 520]} sizes="(max-width: 599px) 80vw, 280px" />
+                  </span>
+                  <span class="flip-text">
+                    <span class="flip-n">{i + 1}</span>
+                    <span class="flip-title serif">{s.title}</span>
+                    <span class="flip-body">{s.body}</span>
+                  </span>
+                  <span class="flip-hint">
+                    <svg width="14" height="14" viewBox="0 0 16 16"><path d="M13.5 6.5A5.5 5.5 0 0 0 3 5.2M2.5 9.5A5.5 5.5 0 0 0 13 10.8M3 2v3.3h3.3M13 14v-3.3H9.7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                    See the app
+                  </span>
+                </span>
+                <span class="flip-face flip-back">
+                  <span class="flip-screen">
+                    <Image src={s.screen} alt="" widths={[240, 480]} sizes="200px" />
+                  </span>
+                  <span class="flip-back-text">{s.back}</span>
+                </span>
+              </span>
+            </button>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</section>
+
+<style>
+  .steps-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: end;
+    justify-content: space-between;
+    gap: 20px 48px;
+  }
+
+  .steps-head h2 {
+    margin-top: 16px;
+    max-width: 12em;
+  }
+
+  .steps-lede {
+    max-width: 22em;
+  }
+
+  /* Phones: one swipeable row with the next card peeking in, instead of four
+     tall cards stacked (~1,800px shorter). Bleeds to the screen edges; the
+     extra block padding keeps the card shadows from being clipped. */
+  .steps-grid {
+    --bleed: clamp(20px, 5vw, 48px);
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: min(80%, 320px);
+    gap: 14px;
+    margin: clamp(32px, 5vw, 64px) calc(-1 * var(--bleed)) -24px;
+    padding: 4px var(--bleed) 24px;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: var(--bleed);
+    scrollbar-width: none;
+  }
+
+  .steps-grid::-webkit-scrollbar {
+    display: none;
+  }
+
+  .flip {
+    scroll-snap-align: start;
+  }
+
+  .flip {
+    display: grid;
+    perspective: 1400px;
+  }
+
+  .flip-btn {
+    display: block;
+    width: 100%;
+    padding: 0;
+    border: 0;
+    background: none;
+    height: 100%;
+    text-align: left;
+    border-radius: var(--radius-card);
+  }
+
+  .flip-inner {
+    position: relative;
+    display: grid;
+    height: 100%;
+    transform-style: preserve-3d;
+    transition: transform 820ms var(--spring-soft);
+  }
+
+  .flip-btn[aria-pressed='true'] .flip-inner {
+    transform: rotateY(180deg);
+  }
+
+  .flip-face {
+    grid-area: 1 / 1;
+    display: flex;
+    flex-direction: column;
+    border-radius: var(--radius-card);
+    background: var(--color-card);
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    box-shadow:
+      0 1px 2px rgb(32 48 60 / 0.04),
+      0 2px 6px rgb(32 48 60 / 0.05),
+      0 10px 24px rgb(32 48 60 / 0.06);
+    overflow: hidden;
+    transition: box-shadow 260ms ease, translate 260ms var(--ease-out);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .flip-btn:hover .flip-face {
+      translate: 0 -3px;
+      box-shadow:
+        0 2px 4px rgb(32 48 60 / 0.05),
+        0 10px 22px rgb(32 48 60 / 0.08),
+        0 24px 44px rgb(32 48 60 / 0.08);
+    }
+
+    .flip-btn:hover .flip-hint svg {
+      rotate: 180deg;
+    }
+  }
+
+  .flip-btn:active .flip-inner {
+    scale: 0.98;
+  }
+
+  .flip-scene {
+    display: block;
+    aspect-ratio: 1;
+    overflow: hidden;
+  }
+
+  .flip-scene :global(img) {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .flip-text {
+    display: grid;
+    gap: 6px;
+    padding: 20px 22px 8px;
+  }
+
+  .flip-n {
+    display: grid;
+    place-items: center;
+    width: 28px;
+    height: 28px;
+    margin-bottom: 4px;
+    border-radius: 99px;
+    background: var(--color-cta);
+    color: var(--color-cta-label);
+    font-size: 14px;
+    font-weight: 800;
+  }
+
+  .flip-title {
+    font-size: 22px;
+    line-height: 1.15;
+    font-weight: 580;
+  }
+
+  .flip-body {
+    color: var(--color-ink-soft);
+    font-size: 15.5px;
+    line-height: 1.45;
+  }
+
+  .flip-hint {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin: auto 22px 20px;
+    padding-top: 12px;
+    font-size: 13px;
+    font-weight: 800;
+    color: var(--color-cta);
+  }
+
+  .flip-hint svg {
+    transition: rotate 500ms var(--spring);
+  }
+
+  .flip-back {
+    transform: rotateY(180deg);
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    padding: 24px 18px;
+    background: var(--color-card-warm);
+  }
+
+  .flip-screen {
+    display: block;
+    width: min(64%, 200px);
+    border-radius: 22px;
+    overflow: hidden;
+    box-shadow:
+      0 0 0 5px #17181b,
+      0 14px 28px rgb(32 48 60 / 0.2);
+  }
+
+  .flip-screen :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .flip-back-text {
+    max-width: 18em;
+    text-align: center;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--color-ink-soft);
+  }
+
+  @media (min-width: 600px) {
+    .steps-grid {
+      grid-auto-flow: row;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: clamp(16px, 2vw, 24px);
+      margin: clamp(40px, 5vw, 64px) 0 0;
+      padding: 0;
+      overflow: visible;
+    }
+  }
+
+  @media (min-width: 1200px) {
+    .steps-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLButtonElement>('[data-flip]').forEach((btn) => {
+    const label = btn.querySelector('.sr-only')!;
+    const front = label.textContent!;
+    btn.addEventListener('click', () => {
+      const on = btn.getAttribute('aria-pressed') !== 'true';
+      btn.setAttribute('aria-pressed', String(on));
+      label.textContent = on ? front.replace('Show the app screen.', 'Showing the app screen.') : front;
+    });
+  });
+</script>

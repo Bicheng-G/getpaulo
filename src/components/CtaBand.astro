@@ -1,0 +1,101 @@
+---
+/** The closing invitation on inner pages. */
+import { Image } from 'astro:assets';
+import GetPaulo from './GetPaulo.astro';
+import FilmButton from './FilmButton.astro';
+import icon from '../assets/ui/app-icon.png';
+
+interface Props {
+  title?: string;
+}
+const { title = 'A wish worth waiting for.' } = Astro.props;
+---
+
+<section class="cta-band" aria-labelledby="cta-title">
+  <div class="wrap">
+    <div class="cta-card">
+      <div class="cta-icon" data-poke tabindex="0" role="img" aria-label="The Paulo app icon">
+        <Image src={icon} alt="" width={120} />
+      </div>
+      <div class="cta-copy">
+        <h2 id="cta-title" class="headline">{title}</h2>
+        <p class="cta-note">iPhone · iOS 17 or later · Free for children, forever</p>
+        <div class="cta-actions">
+          <GetPaulo />
+          <FilmButton />
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .cta-band {
+    padding: clamp(40px, 6vw, 80px) 0 clamp(56px, 8vw, 104px);
+  }
+
+  /* Mobile-first: one column; the icon moves beside the copy on wider screens.
+     minmax(0, 1fr) lets the copy shrink below its min-content width, so the
+     buttons can never push past the card edge. */
+  .cta-card {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    align-items: center;
+    gap: 24px 36px;
+    padding: clamp(20px, 4vw, 48px);
+    border-radius: var(--radius-sheet);
+    background: var(--color-card);
+    box-shadow:
+      0 1px 2px rgb(32 48 60 / 0.04),
+      0 10px 30px rgb(32 48 60 / 0.07);
+  }
+
+  .cta-icon {
+    width: clamp(72px, 8vw, 104px);
+    border-radius: 24%;
+    overflow: hidden;
+    rotate: -6deg;
+    box-shadow: 0 10px 24px rgb(32 48 60 / 0.18);
+  }
+
+  .cta-icon :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .cta-card {
+    padding-left: clamp(20px, 5vw, 64px);
+  }
+
+  .cta-copy h2 {
+    font-size: clamp(2rem, 3.6vw, 3rem);
+  }
+
+  .cta-note {
+    margin-top: 10px;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--color-ink-soft);
+  }
+
+  .cta-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px 16px;
+    margin-top: 24px;
+  }
+
+  @media (min-width: 600px) {
+    .cta-card {
+      grid-template-columns: auto minmax(0, 1fr);
+    }
+
+    .cta-actions {
+      flex-direction: row;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+  }
+</style>

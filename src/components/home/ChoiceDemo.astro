@@ -1,0 +1,1253 @@
+---
+/**
+ * A playable Choice Moment.
+ *
+ * The product contract holds here exactly as in the app
+ * (docs/design/principles.md#choice-symmetry):
+ *   - Before the choice both buttons are the same component, size, weight,
+ *     entrance and press. Nothing glows, nothing is pre-selected.
+ *   - After the choice both outcomes are equally warm; the honest difference
+ *     is the star that lands on the path when the child saves.
+ *   - No confetti for an ordinary save. Only "ready" (a real milestone) gets
+ *     a celebration, once.
+ */
+import { Image } from 'astro:assets';
+import Phone from '../Phone.astro';
+import taxi from '../../assets/ui/taxi.png';
+import stone from '../../assets/ui/stone.png';
+import arcade from '../../assets/clay/TemptationArcade.png';
+
+const TARGET = 5;
+const START = 3;
+const stones = Array.from({ length: TARGET }, (_, i) => TARGET - 1 - i); // top of the path first
+const star = 'M12 2.6l2.6 5.6 6.1.8-4.5 4.2 1.2 6-5.4-3-5.4 3 1.2-6L3.3 9l6.1-.8z';
+---
+
+<section class="try section-pad" id="try" aria-labelledby="try-title">
+  <div class="wrap try-grid">
+    <div class="try-copy">
+      <p class="eyebrow">Try it yourself</p>
+      <h2 id="try-title" class="headline">In the moment, <span class="accent">they&nbsp;choose.</span></h2>
+      <p class="lede">
+        This is the Choice Moment, the heart of Paulo. Hand over the phone and see it from your
+        child’s side.
+      </p>
+
+      <ol class="try-notes">
+        <li>
+          <span class="try-n" aria-hidden="true">1</span>
+          <div>
+            <h3>A breath first</h3>
+            <p>A calm pause turns a one-second impulse into a choice. It isn’t a nudge toward saving.</p>
+          </div>
+        </li>
+        <li>
+          <span class="try-n" aria-hidden="true">2</span>
+          <div>
+            <h3>Two equal buttons</h3>
+            <p>
+              Same size, same clay, same feel. Nothing glows first. The app has a test that checks the
+              two buttons mirror each other.
+            </p>
+          </div>
+        </li>
+        <li>
+          <span class="try-n" aria-hidden="true">3</span>
+          <div>
+            <h3>The path is a fact</h3>
+            <p>Each stone is a star still to go. No sums, no money, no words needed at four.</p>
+          </div>
+        </li>
+      </ol>
+    </div>
+
+    <div class="try-stage">
+      <div class="try-phone-wrap" data-cm-phone>
+        <Phone class="try-phone" style="--w: var(--try-w)">
+          <div class="cm" data-cm data-target={TARGET} data-start={START}>
+            <p class="sr-only" aria-live="polite" data-cm-live></p>
+
+            <!-- 0 · The grown-up's side -->
+            <div class="cm-view cm-start is-active" data-view="start">
+              <p class="cm-kicker">Grown-up</p>
+              <p class="cm-big serif">Ready when they are.</p>
+              <div class="cm-start-wish">
+                <Image src={taxi} alt="" width={200} class="sticker-shadow" />
+              </div>
+              <p class="cm-small">The wish: a toy taxi.<br />Two more stars to go.</p>
+              <button type="button" class="cm-btn" data-act="handover">Hand over</button>
+            </div>
+
+            <!-- 1 · The hand-over beat: the colour changes so the grown-up feels the mode change -->
+            <div class="cm-view cm-handoff" data-view="handoff" aria-hidden="true">
+              <p class="cm-big serif">Your turn</p>
+            </div>
+
+            <!-- 2 · Breathe -->
+            <div class="cm-view cm-breathe" data-view="breathe">
+              <p class="cm-breath-word serif" data-breath-word>Breathe in</p>
+              <div class="cm-buddy" data-buddy>
+                <div class="cm-breath-wish">
+                  <Image src={taxi} alt="" width={200} class="sticker-shadow" />
+                </div>
+                <svg class="cm-face" viewBox="0 0 80 30" aria-hidden="true"><path d="M8 6c4 6 12 6 16 0M56 6c4 6 12 6 16 0M28 18c6 7 18 7 24 0" fill="none" stroke="#20303c" stroke-width="3.2" stroke-linecap="round"></path></svg>
+              </div>
+              <button type="button" class="cm-skip" data-act="skip">Skip</button>
+            </div>
+
+            <!-- 3 · Choose -->
+            <div class="cm-view cm-choose" data-view="choose">
+              <div class="cm-wish">
+                <Image src={taxi} alt="" width={240} class="sticker-shadow cm-wish-img" />
+                <p class="cm-left"><b data-left>{TARGET - START}</b> <span data-left-word>more stars to</span><br /><span class="cm-wish-name">Car</span></p>
+              </div>
+
+              <ol class="cm-path" aria-label="The path to the wish">
+                {
+                  stones.map((n) => (
+                    <li class="cm-stone" data-stone={n} style={`--n:${n}`}>
+                      <Image src={stone} alt="" width={90} class="cm-stone-img" />
+                      <svg class="cm-stone-star" viewBox="0 0 24 24" aria-hidden="true"><path d={star}></path></svg>
+                    </li>
+                  ))
+                }
+              </ol>
+
+              <div class="cm-choices" role="group" aria-label="The two choices" tabindex="-1" data-choices>
+                <button type="button" class="cm-choice" data-choice="play" style="--surface: var(--color-choice-now-surface); --edge: var(--color-choice-now-edge)">
+                  <span class="cm-token"><Image src={arcade} alt="" width={140} /></span>
+                  <span class="cm-choice-label">Play now</span>
+                  <span class="cm-choice-sub">have fun today</span>
+                </button>
+                <button type="button" class="cm-choice" data-choice="save" style="--surface: var(--color-choice-wish-surface); --edge: var(--color-choice-wish-edge)">
+                  <span class="cm-token"><Image src={taxi} alt="" width={140} /></span>
+                  <span class="cm-choice-label">Save for wish</span>
+                  <span class="cm-choice-sub">one step closer</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- 4 · What happened (both outcomes share this view and its motion) -->
+            <div class="cm-view cm-result" data-view="result">
+              <div class="cm-result-art" data-result-art></div>
+              <p class="cm-big serif" data-result-title></p>
+              <p class="cm-small" data-result-line></p>
+              <div class="cm-actions">
+                <button type="button" class="cm-btn" data-act="done">Done</button>
+                <button type="button" class="cm-hold" data-act="undo">
+                  <span class="cm-hold-fill" aria-hidden="true"></span>
+                  <span class="cm-hold-label">Hold: changed my mind</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- 5 · Ready: a real milestone, celebrated once -->
+            <div class="cm-view cm-ready" data-view="ready">
+              <div class="cm-confetti" data-confetti aria-hidden="true"></div>
+              <div class="cm-ready-wish">
+                <Image src={taxi} alt="" width={260} class="sticker-shadow" />
+              </div>
+              <p class="cm-big serif">My Car is ready!</p>
+              <div class="cm-ready-stars" aria-hidden="true">
+                {Array.from({ length: TARGET }, (_, i) => <span style={`--i:${i}`}><svg viewBox="0 0 24 24"><path d={star}></path></svg></span>)}
+              </div>
+              <p class="cm-small">I waited for it. Let’s go and get it.</p>
+              <p class="cm-day"><span aria-hidden="true">☾ ☾</span> We get it on Saturday</p>
+              <button type="button" class="cm-btn" data-act="reset">Start a new wish</button>
+            </div>
+
+            <!-- 6 · Today's choices are used: calm, no lock, no red -->
+            <div class="cm-view cm-rest" data-view="rest">
+              <p class="cm-big serif">That’s today’s Paulo choices.</p>
+              <p class="cm-small">See you next time.</p>
+              <button type="button" class="cm-btn cm-btn-paper" data-act="nextday">Skip to tomorrow</button>
+            </div>
+          </div>
+        </Phone>
+        <p class="ledger-peek" data-ledger-peek aria-hidden="true"></p>
+      </div>
+
+      <aside class="ledger" aria-labelledby="ledger-title">
+        <p id="ledger-title" class="ledger-h">The family’s record</p>
+        <ol class="ledger-list" data-ledger>
+          <li class="ledger-empty">Every choice, and every change of mind, leaves a line here.</li>
+        </ol>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<style is:global>
+  /* Phones: the playable phone comes straight after the intro and the three
+     notes follow it (.try-copy dissolves into the grid so its children can be
+     reordered). Side by side from 1200px. */
+  .try-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    align-items: center;
+  }
+
+  .try-copy {
+    display: contents;
+  }
+
+  .try-copy h2 {
+    margin-top: 16px;
+  }
+
+  .try-copy .lede {
+    margin-top: 22px;
+    max-width: 26em;
+  }
+
+  .try-notes {
+    order: 2;
+    display: grid;
+    gap: 22px;
+    margin-top: 38px;
+  }
+
+  .try-notes li {
+    display: grid;
+    grid-template-columns: 36px 1fr;
+    gap: 16px;
+  }
+
+  .try-n {
+    display: grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 99px;
+    background: var(--color-card);
+    font-weight: 800;
+    color: var(--color-cta);
+    box-shadow: 0 1px 2px rgb(32 48 60 / 0.06), 0 3px 8px rgb(32 48 60 / 0.06);
+  }
+
+  .try-notes h3 {
+    font-size: 20px;
+    line-height: 1.25;
+  }
+
+  .try-notes p {
+    margin-top: 4px;
+    color: var(--color-ink-soft);
+    max-width: 34em;
+  }
+
+  .try-stage {
+    /* As wide as the screen allows, but never taller than the visible area, so
+       the path and both buttons are on screen together while playing. */
+    --try-w: min(86vw, 340px, calc((100svh - 128px) / 2.17));
+    order: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(20px, 3vw, 40px);
+    margin-top: 32px;
+  }
+
+  /* Room for the record slip below when the "Hand over the phone" link
+     scrolls the phone to the middle (the header is covered by the page's
+     scroll-padding-top). */
+  .try-phone-wrap {
+    position: relative;
+    scroll-margin-bottom: 30px;
+  }
+
+  /* On phones the record sits below the fold, so each new line also prints
+     briefly as a slip under the phone. Same slip for either choice. */
+  .ledger-peek {
+    position: absolute;
+    z-index: 3;
+    left: 50%;
+    bottom: -18px;
+    display: grid;
+    gap: 2px;
+    width: max-content;
+    max-width: 92%;
+    padding: 8px 14px 10px;
+    border-radius: 6px;
+    background: var(--color-card-warm);
+    box-shadow:
+      0 1px 2px rgb(32 48 60 / 0.08),
+      0 8px 20px rgb(32 48 60 / 0.12);
+    font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+    font-size: 13px;
+    line-height: 1.35;
+    color: var(--color-ink);
+    translate: -50% 0;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .ledger-peek-h {
+    font-family: var(--font-rounded);
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-ink-soft);
+  }
+
+  .ledger-peek.is-on {
+    animation: ledger-peek 2600ms var(--ease-out) both;
+  }
+
+  @keyframes ledger-peek {
+    0% {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    10%,
+    82% {
+      opacity: 1;
+      transform: none;
+    }
+    100% {
+      opacity: 0;
+    }
+  }
+
+  /* ---------- Inside the phone ---------- */
+
+  .cm {
+    position: absolute;
+    inset: 0;
+    /* A floor so the smallest labels stay readable on short phones. */
+    font-size: max(13px, calc(var(--w) * 0.046));
+    --cm-pad: calc(var(--w) * 0.07);
+  }
+
+  .cm-view {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.8em;
+    padding: var(--cm-pad);
+    text-align: center;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(10px) scale(0.98);
+    filter: blur(4px);
+    transition:
+      opacity 220ms var(--ease-out),
+      transform 220ms var(--ease-out),
+      filter 220ms var(--ease-out),
+      visibility 0s linear 220ms;
+  }
+
+  .cm-view.is-active {
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+    filter: none;
+    transition:
+      opacity 360ms var(--ease-out) 80ms,
+      transform 640ms var(--spring-soft) 80ms,
+      filter 360ms var(--ease-out) 80ms,
+      visibility 0s;
+  }
+
+  .cm-kicker {
+    font-size: 0.72em;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-ink-soft);
+  }
+
+  .cm-big {
+    font-size: 1.55em;
+    line-height: 1.12;
+    font-weight: 580;
+  }
+
+  .cm-small {
+    font-size: 0.86em;
+    line-height: 1.4;
+    color: var(--color-ink-soft);
+    font-weight: 600;
+  }
+
+  .cm-start-wish {
+    width: 48%;
+    margin: 0.4em 0;
+    animation: cm-bob 3.2s ease-in-out infinite alternate;
+  }
+
+  @keyframes cm-bob {
+    to {
+      transform: translateY(-6px) rotate(-3deg);
+    }
+  }
+
+  .cm img {
+    display: block;
+    width: 100%;
+    height: auto;
+    -webkit-user-drag: none;
+    user-select: none;
+  }
+
+  .cm-btn {
+    margin-top: 0.6em;
+    min-height: 44px;
+    padding: 0.7em 1.6em;
+    border: 0;
+    border-radius: 999px;
+    background: var(--color-cta);
+    color: var(--color-cta-label);
+    font-size: 0.95em;
+    font-weight: 800;
+    box-shadow: 0 4px 0 var(--color-cta-deep);
+    transition:
+      transform 140ms var(--ease-out),
+      box-shadow 140ms var(--ease-out);
+  }
+
+  .cm-btn:active {
+    transform: translateY(3px);
+    box-shadow: 0 1px 0 var(--color-cta-deep);
+  }
+
+  .cm-btn-paper {
+    background: var(--color-card);
+    color: var(--color-ink);
+    box-shadow: 0 4px 0 #d9d3c7;
+  }
+
+  .cm-btn-paper:active {
+    box-shadow: 0 1px 0 #d9d3c7;
+  }
+
+  /* Hand-over: taupe on purpose, so the grown-up feels the change of mode. */
+  .cm-handoff {
+    background: #817767;
+    color: var(--color-cta-label);
+  }
+
+  /* Breathe */
+  .cm-breathe {
+    justify-content: flex-start;
+    padding-top: calc(var(--cm-pad) * 1.6);
+    overflow: hidden;
+  }
+
+  .cm-breath-word {
+    font-size: 1.4em;
+    transition: opacity 300ms ease;
+  }
+
+  .cm-buddy {
+    position: absolute;
+    left: -8%;
+    right: -8%;
+    bottom: 0;
+    height: 62%;
+    border-radius: 48% 48% 0 0 / 22% 22% 0 0;
+    background: var(--color-buddy);
+    transform: translateY(26%);
+  }
+
+  .cm-breath-wish {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    width: 40%;
+    translate: -50% -78%;
+  }
+
+  .cm-face {
+    position: absolute;
+    left: 50%;
+    top: 12%;
+    width: 30%;
+    translate: -50% 0;
+  }
+
+  .cm-skip {
+    position: absolute;
+    z-index: 2;
+    right: var(--cm-pad);
+    top: 0.6em;
+    min-height: 36px;
+    padding: 0 0.9em;
+    border: 0;
+    border-radius: 999px;
+    background: rgb(255 255 255 / 0.7);
+    font-size: 0.75em;
+    font-weight: 800;
+    color: var(--color-ink-soft);
+  }
+
+  /* Choose */
+  .cm-choose {
+    justify-content: flex-start;
+    gap: 0;
+    padding-top: calc(var(--cm-pad) * 0.6);
+  }
+
+  .cm-wish {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .cm-wish-img {
+    width: calc(var(--w) * 0.36) !important;
+  }
+
+  .cm-left {
+    margin-top: 0.2em;
+    font-size: 0.82em;
+    line-height: 1.25;
+    font-weight: 700;
+    color: var(--color-ink-soft);
+  }
+
+  .cm-left b {
+    font-size: 1.35em;
+    color: var(--color-ink);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .cm-wish-name {
+    color: var(--color-ink);
+  }
+
+  .cm-path {
+    position: relative;
+    flex: 1;
+    width: 100%;
+  }
+
+  /* Stones wander down from the wish toward the Save token, as in the app:
+     the path depicts a true consequence, it does not recommend. */
+  .cm-stone {
+    position: absolute;
+    left: var(--x);
+    top: calc((4 - var(--n)) * 20% + 2%);
+    width: 15%;
+    translate: -50% 0;
+  }
+
+  .cm-stone[data-stone='4'] {
+    --x: 52%;
+  }
+
+  .cm-stone[data-stone='3'] {
+    --x: 44%;
+  }
+
+  .cm-stone[data-stone='2'] {
+    --x: 52%;
+  }
+
+  .cm-stone[data-stone='1'] {
+    --x: 60%;
+  }
+
+  .cm-stone[data-stone='0'] {
+    --x: 68%;
+  }
+
+  .cm-stone-img {
+    filter: drop-shadow(0 2px 2px rgb(32 48 60 / 0.12));
+  }
+
+  .cm-stone-star {
+    position: absolute;
+    left: 50%;
+    top: 44%;
+    width: 62%;
+    translate: -50% -50%;
+    fill: var(--color-star);
+    stroke: var(--color-star-deep);
+    stroke-width: 1.2;
+    stroke-linejoin: round;
+    opacity: 0;
+    transform: scale(0.4);
+  }
+
+  .cm-stone.is-filled .cm-stone-star {
+    opacity: 1;
+    transform: none;
+    transition:
+      opacity 160ms ease,
+      transform 700ms var(--spring-bouncy);
+  }
+
+  .cm-choices {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6%;
+    width: 100%;
+    padding-bottom: 0.4em;
+  }
+
+  /* One component, used twice. Only the semantic colour pair differs. */
+  .cm-choices:focus {
+    outline: none;
+  }
+
+  .cm-choice {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.1em;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--color-ink);
+    touch-action: manipulation;
+  }
+
+  .cm-token {
+    display: grid;
+    place-items: center;
+    width: 86%;
+    aspect-ratio: 1;
+    margin-bottom: 0.35em;
+    border-radius: 50%;
+    background: var(--surface);
+    box-shadow:
+      0 5px 0 var(--edge),
+      0 8px 14px color-mix(in srgb, var(--edge) 55%, transparent);
+    transition: transform 220ms var(--ease-out), box-shadow 220ms var(--ease-out);
+  }
+
+  .cm-token img {
+    width: 62% !important;
+  }
+
+  .cm-choice:active .cm-token {
+    transform: translateY(5px) scale(0.98);
+    box-shadow:
+      0 0 0 var(--edge),
+      0 3px 6px color-mix(in srgb, var(--edge) 55%, transparent);
+    transition-duration: 70ms;
+  }
+
+  .cm-choice:disabled {
+    cursor: default;
+  }
+
+  .cm-choice-label {
+    font-size: 1em;
+    font-weight: 800;
+  }
+
+  .cm-choice-sub {
+    font-size: 0.7em;
+    font-weight: 600;
+    color: var(--color-ink-soft);
+  }
+
+  /* Both tokens arrive together, identically, and settle during a short
+     quiet period in which a touch does not count. */
+  .cm-choose.is-active .cm-choice {
+    animation: cm-rise 700ms var(--spring-soft) 260ms both;
+  }
+
+  @keyframes cm-rise {
+    from {
+      opacity: 0;
+      transform: translateY(22px);
+    }
+  }
+
+  .cm-flying-star {
+    position: absolute;
+    z-index: 10;
+    width: calc(var(--w) * 0.08);
+    left: 0;
+    top: 0;
+    fill: var(--color-star);
+    stroke: var(--color-star-deep);
+    stroke-width: 1.2;
+    pointer-events: none;
+  }
+
+  /* Result */
+  .cm-result-art {
+    width: 52%;
+  }
+
+  .cm-result-art .cm-token {
+    width: 100%;
+  }
+
+  .cm-result .is-in {
+    animation: cm-pop 900ms var(--spring-bouncy) both;
+  }
+
+  @keyframes cm-pop {
+    from {
+      opacity: 0;
+      transform: scale(0.6) rotate(-8deg);
+    }
+  }
+
+  .cm-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.6em;
+    margin-top: 0.6em;
+  }
+
+  .cm-hold {
+    position: relative;
+    overflow: hidden;
+    min-height: 40px;
+    padding: 0 1.1em;
+    border: 0;
+    border-radius: 999px;
+    background: var(--color-card);
+    font-size: 0.78em;
+    font-weight: 700;
+    color: var(--color-ink-soft);
+    box-shadow: 0 1px 2px rgb(32 48 60 / 0.06), 0 3px 8px rgb(32 48 60 / 0.06);
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
+  .cm-hold-fill {
+    position: absolute;
+    inset: 0;
+    background: var(--color-mist);
+    clip-path: inset(0 100% 0 0);
+    transition: clip-path 200ms var(--ease-out);
+  }
+
+  .cm-hold.is-holding .cm-hold-fill {
+    clip-path: inset(0 0 0 0);
+    transition: clip-path 800ms linear;
+  }
+
+  .cm-hold-label {
+    position: relative;
+  }
+
+  .cm-hold[hidden] {
+    display: none;
+  }
+
+  /* Ready */
+  .cm-ready {
+    gap: 0.6em;
+    background: radial-gradient(closest-side at 50% 30%, rgb(248 236 192 / 0.9), transparent);
+  }
+
+  .cm-ready-wish {
+    width: 50%;
+  }
+
+  .cm-ready.is-active .cm-ready-wish {
+    animation: cm-pop 1000ms var(--spring-bouncy) 120ms both;
+  }
+
+  .cm-ready-stars {
+    display: flex;
+    gap: 4%;
+    width: 78%;
+    justify-content: center;
+  }
+
+  .cm-ready-stars span {
+    display: grid;
+    place-items: center;
+    width: 18%;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: var(--color-star);
+    box-shadow: 0 3px 0 var(--color-star-deep);
+  }
+
+  .cm-ready-stars svg {
+    width: 60%;
+    fill: #fff;
+  }
+
+  .cm-ready.is-active .cm-ready-stars span {
+    animation: cm-pop 800ms var(--spring-bouncy) both;
+    animation-delay: calc(300ms + var(--i) * 90ms);
+  }
+
+  .cm-day {
+    padding: 0.45em 1em;
+    border-radius: 999px;
+    background: var(--color-card);
+    font-size: 0.8em;
+    font-weight: 800;
+    box-shadow: 0 1px 2px rgb(32 48 60 / 0.06), 0 3px 8px rgb(32 48 60 / 0.06);
+  }
+
+  .cm-day span {
+    color: var(--color-dusty-blue);
+    margin-right: 0.3em;
+  }
+
+  .cm-confetti {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
+
+  .cm-confetti i {
+    position: absolute;
+    top: -4%;
+    width: 7px;
+    height: 10px;
+    border-radius: 2px;
+  }
+
+  /* ---------- The ledger tape ---------- */
+
+  .ledger {
+    width: min(100%, 320px);
+    align-self: center;
+    padding: 18px 16px 22px;
+    background: var(--color-card-warm);
+    border-radius: 6px;
+    box-shadow:
+      0 1px 2px rgb(32 48 60 / 0.06),
+      0 8px 20px rgb(32 48 60 / 0.07);
+    /* a torn receipt edge */
+    mask: conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) bottom / 12px 100%;
+  }
+
+  .ledger-h {
+    padding-bottom: 10px;
+    margin-bottom: 8px;
+    border-bottom: 1.5px dashed rgb(32 48 60 / 0.18);
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-ink-soft);
+  }
+
+  .ledger-list {
+    display: grid;
+    gap: 6px;
+    font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+    font-size: 12.5px;
+    line-height: 1.35;
+  }
+
+  .ledger-list li {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+  }
+
+  .ledger-list li.is-new {
+    animation: ledger-print 500ms var(--ease-out) both;
+  }
+
+  @keyframes ledger-print {
+    from {
+      opacity: 0;
+      transform: translateY(-6px);
+      clip-path: inset(0 0 100% 0);
+    }
+  }
+
+  .ledger-empty {
+    font-family: var(--font-rounded);
+    color: var(--color-ink-soft);
+  }
+
+  .ledger-star {
+    color: var(--color-star-deep);
+    font-weight: 700;
+  }
+
+  @media (min-width: 1200px) {
+    .try-grid {
+      grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+      gap: clamp(40px, 6vw, 88px);
+    }
+
+    .try-copy {
+      display: block;
+    }
+
+    .try-stage {
+      --try-w: clamp(280px, 25vw, 330px);
+      flex-direction: row;
+      margin-top: 0;
+    }
+
+    .ledger {
+      width: clamp(210px, 18vw, 250px);
+      rotate: 1.5deg;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cm-start-wish {
+      animation: none;
+    }
+
+    .ledger-peek.is-on {
+      animation-name: ledger-peek-fade;
+    }
+
+    @keyframes ledger-peek-fade {
+      0%,
+      100% {
+        opacity: 0;
+      }
+      8%,
+      85% {
+        opacity: 1;
+      }
+    }
+  }
+</style>
+
+<script>
+  import { play, reduced, centre, EASE_IN_OUT } from '../../scripts/motion';
+
+  const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+  const PER_DAY = 2;
+
+  document.querySelectorAll<HTMLElement>('[data-cm]').forEach((cm) => {
+    const target = Number(cm.dataset.target);
+    let stars = Number(cm.dataset.start);
+    let day = 0;
+    let usedToday = 0;
+    let last: 'play' | 'save' | null = null;
+    let busy = false;
+    let breatheTimer = 0;
+
+    const $ = <T extends Element = HTMLElement>(s: string) => cm.querySelector<T>(s)!;
+    const views = new Map([...cm.querySelectorAll<HTMLElement>('[data-view]')].map((v) => [v.dataset.view!, v]));
+    const live = $('[data-cm-live]');
+    const ledger = document.querySelector<HTMLElement>('[data-ledger]')!;
+    const peek = document.querySelector<HTMLElement>('[data-ledger-peek]')!;
+    const phone = cm.closest<HTMLElement>('[data-cm-phone]')!;
+    const choiceBtns = [...cm.querySelectorAll<HTMLButtonElement>('[data-choice]')];
+    const stonesEl = [...cm.querySelectorAll<HTMLElement>('[data-stone]')];
+
+    let current = 'start';
+
+    function show(name: string, focus = true) {
+      const from = views.get(current)!;
+      const to = views.get(name)!;
+      from.classList.remove('is-active');
+      from.inert = true;
+      to.inert = false;
+      to.classList.add('is-active');
+      current = name;
+      if (focus && cm.contains(document.activeElement)) {
+        // Never land focus on one of the two choices: a focus ring on one
+        // option would be exactly the pre-selection the Moment forbids.
+        const target =
+          name === 'choose'
+            ? to.querySelector<HTMLElement>('[data-choices]')
+            : to.querySelector<HTMLElement>('button:not([disabled]):not([hidden])');
+        target?.focus({ preventScroll: true });
+      }
+    }
+
+    views.forEach((v, k) => (v.inert = k !== 'start'));
+
+    function say(text: string) {
+      live.textContent = text;
+    }
+
+    function paintStones() {
+      stonesEl.forEach((s) => s.classList.toggle('is-filled', Number(s.dataset.stone) < stars));
+      const left = target - stars;
+      $('[data-left]').textContent = String(left);
+      $('[data-left-word]').textContent = left === 1 ? 'more star to' : 'more stars to';
+    }
+
+    function log(text: string, extra = '') {
+      ledger.querySelector('.ledger-empty')?.remove();
+      const li = document.createElement('li');
+      li.className = 'is-new';
+      li.innerHTML = `<span>${DAYS[day % 7]} · ${text}</span>${extra ? `<span class="ledger-star">${extra}</span>` : ''}`;
+      ledger.appendChild(li);
+      while (ledger.children.length > 7) ledger.firstElementChild?.remove();
+
+      // If the record itself is off screen (phones), print the line under the phone too.
+      const box = ledger.getBoundingClientRect();
+      if (box.top > window.innerHeight - 24 || box.bottom < 0) {
+        const h = document.createElement('span');
+        h.className = 'ledger-peek-h';
+        h.textContent = 'The family’s record';
+        const line = document.createElement('span');
+        line.textContent = `${DAYS[day % 7]} · ${text}${extra ? `  ${extra}` : ''}`;
+        peek.replaceChildren(h, line);
+        peek.classList.remove('is-on');
+        void peek.offsetWidth; // restart the animation
+        peek.classList.add('is-on');
+      }
+    }
+
+    async function handover() {
+      busy = true;
+      show('handoff');
+      if (!reduced()) {
+        phone.animate(
+          [
+            { transform: 'none' },
+            { transform: 'translateX(-14px) rotate(-7deg)', offset: 0.35 },
+            { transform: 'none' },
+          ],
+          { duration: 900, easing: EASE_IN_OUT },
+        );
+      }
+      await new Promise((r) => setTimeout(r, 900));
+      breathe();
+    }
+
+    function breathe() {
+      show('breathe');
+      say('Breathe in. Breathe out.');
+      const word = $('[data-breath-word]');
+      const buddy = $('[data-buddy]');
+      word.textContent = 'Breathe in';
+      if (!reduced()) {
+        buddy.animate(
+          [
+            { transform: 'translateY(26%)' },
+            { transform: 'translateY(0%)', offset: 0.42 },
+            { transform: 'translateY(0%)', offset: 0.5 },
+            { transform: 'translateY(26%)', offset: 0.92 },
+            { transform: 'translateY(26%)' },
+          ],
+          { duration: 4600, easing: 'ease-in-out' },
+        );
+      }
+      // The words keep their timing even under Reduce Motion: a pause is not motion.
+      breatheTimer = window.setTimeout(() => {
+        word.textContent = 'Breathe out';
+        breatheTimer = window.setTimeout(choose, 2400);
+      }, 2200);
+      busy = false;
+    }
+
+    function choose() {
+      clearTimeout(breatheTimer);
+      paintStones();
+      show('choose');
+      say(`Two choices: Play now, or Save for wish. ${target - stars} more stars to the wish.`);
+      // A short quiet period: the same for both buttons; a stray touch is not a decision.
+      choiceBtns.forEach((b) => (b.disabled = true));
+      setTimeout(
+        () => choiceBtns.forEach((b) => (b.disabled = false)),
+        reduced() ? 0 : 900,
+      );
+    }
+
+    async function decide(kind: 'play' | 'save') {
+      if (busy) return;
+      busy = true;
+      choiceBtns.forEach((b) => (b.disabled = true));
+      last = kind;
+      usedToday++;
+
+      const btn = choiceBtns.find((b) => b.dataset.choice === kind)!;
+      const token = btn.querySelector('.cm-token')!;
+
+      if (kind === 'save') {
+        const next = stonesEl.find((s) => Number(s.dataset.stone) === stars)!;
+        await flyStar(token, next);
+        stars++;
+        paintStones();
+        log('Saved for Car', '★ +1');
+      } else {
+        log('Played now');
+      }
+
+      await new Promise((r) => setTimeout(r, reduced() ? 0 : 380));
+
+      if (kind === 'save' && stars >= target) {
+        ready();
+      } else {
+        result(kind, token);
+      }
+      busy = false;
+    }
+
+    function flyStar(from: Element, to: HTMLElement) {
+      const box = cm.getBoundingClientRect();
+      const a = centre(from);
+      const b = centre(to);
+      const s = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      s.setAttribute('viewBox', '0 0 24 24');
+      s.setAttribute('class', 'cm-flying-star');
+      s.innerHTML = '<path d="M12 2.6l2.6 5.6 6.1.8-4.5 4.2 1.2 6-5.4-3-5.4 3 1.2-6L3.3 9l6.1-.8z"/>';
+      cm.appendChild(s);
+      const size = s.getBoundingClientRect().width / 2;
+      const ax = a.x - box.left - size;
+      const ay = a.y - box.top - size;
+      const bx = b.x - box.left - size;
+      const by = b.y - box.top - size * 1.2;
+      const mx = (ax + bx) / 2 + 30;
+      const my = Math.min(ay, by) - 50;
+      return play(
+        s,
+        [
+          { transform: `translate(${ax}px, ${ay}px) scale(0.4) rotate(0deg)`, opacity: 0 },
+          { transform: `translate(${ax}px, ${ay - 20}px) scale(1.3) rotate(40deg)`, opacity: 1, offset: 0.18 },
+          { transform: `translate(${mx}px, ${my}px) scale(1.15) rotate(160deg)`, offset: 0.55 },
+          { transform: `translate(${bx}px, ${by}px) scale(0.9) rotate(288deg)`, opacity: 1 },
+        ],
+        { duration: 820, easing: 'cubic-bezier(0.45, 0, 0.25, 1)' },
+      ).then(() => s.remove());
+    }
+
+    function result(kind: 'play' | 'save', token: Element) {
+      const art = $('[data-result-art]');
+      art.innerHTML = '';
+      const clone = token.cloneNode(true) as HTMLElement;
+      const btnStyle = (token.parentElement as HTMLElement).style;
+      clone.style.setProperty('--surface', btnStyle.getPropertyValue('--surface'));
+      clone.style.setProperty('--edge', btnStyle.getPropertyValue('--edge'));
+      clone.classList.add('is-in');
+      art.appendChild(clone);
+      const title = $('[data-result-title]');
+      const line = $('[data-result-line]');
+      if (kind === 'play') {
+        title.textContent = 'I chose this today.';
+        line.textContent = 'Have fun! My wish is still here, waiting.';
+      } else {
+        title.textContent = 'One step closer.';
+        const left = target - stars;
+        line.textContent = `A star joined my promise. ${left} more to go.`;
+      }
+      $('[data-act="undo"]').hidden = false;
+      show('result');
+      say(`${title.textContent} ${line.textContent}`);
+    }
+
+    function ready() {
+      show('ready');
+      say('My Car is ready! I waited for it. We get it on Saturday.');
+      log('Car is ready', '★★★★★');
+      confetti();
+    }
+
+    function confetti() {
+      if (reduced()) return;
+      const box = $('[data-confetti]');
+      box.innerHTML = '';
+      const colours = ['#f0b84c', '#ce8f70', '#6fa3c8', '#b7bc93', '#c3bcd8', '#dcc0bc'];
+      for (let i = 0; i < 28; i++) {
+        const p = document.createElement('i');
+        p.style.left = `${Math.random() * 100}%`;
+        p.style.background = colours[i % colours.length];
+        box.appendChild(p);
+        p.animate(
+          [
+            { transform: `translateY(0) rotate(0deg)`, opacity: 1 },
+            {
+              transform: `translate(${Math.random() * 60 - 30}px, ${300 + Math.random() * 260}px) rotate(${Math.random() * 720 - 360}deg)`,
+              opacity: 0,
+            },
+          ],
+          { duration: 1600 + Math.random() * 1200, delay: Math.random() * 400, easing: 'cubic-bezier(0.2, 0.6, 0.4, 1)', fill: 'both' },
+        );
+      }
+    }
+
+    function done() {
+      if (usedToday >= PER_DAY) {
+        show('rest');
+        say('That’s today’s Paulo choices. See you next time.');
+      } else {
+        choose();
+      }
+    }
+
+    function undo() {
+      if (!last) return;
+      if (last === 'save') {
+        stars--;
+        paintStones();
+      }
+      usedToday--;
+      log('Changed my mind');
+      last = null;
+      choose();
+    }
+
+    // Hold to undo: deliberate on the way in, quick to let go.
+    const hold = $<HTMLButtonElement>('[data-act="undo"]');
+    let holdTimer = 0;
+    const startHold = () => {
+      hold.classList.add('is-holding');
+      holdTimer = window.setTimeout(() => {
+        hold.classList.remove('is-holding');
+        undo();
+      }, reduced() ? 0 : 800);
+    };
+    const stopHold = () => {
+      clearTimeout(holdTimer);
+      hold.classList.remove('is-holding');
+    };
+    hold.addEventListener('pointerdown', startHold);
+    ['pointerup', 'pointerleave', 'pointercancel'].forEach((e) => hold.addEventListener(e, stopHold));
+    hold.addEventListener('keydown', (e) => {
+      if ((e.key === 'Enter' || e.key === ' ') && !e.repeat) {
+        e.preventDefault();
+        startHold();
+      }
+    });
+    hold.addEventListener('keyup', stopHold);
+
+    choiceBtns.forEach((b) => b.addEventListener('click', () => decide(b.dataset.choice as 'play' | 'save')));
+
+    cm.addEventListener('click', (e) => {
+      const act = (e.target as HTMLElement).closest<HTMLElement>('[data-act]')?.dataset.act;
+      if (!act || act === 'undo') return;
+      if (act === 'handover' && !busy) handover();
+      if (act === 'skip') {
+        clearTimeout(breatheTimer);
+        choose();
+      }
+      if (act === 'done') done();
+      if (act === 'nextday') {
+        day++;
+        usedToday = 0;
+        last = null;
+        choose();
+      }
+      if (act === 'reset') {
+        stars = Number(cm.dataset.start);
+        usedToday = 0;
+        last = null;
+        day++;
+        paintStones();
+        show('start');
+      }
+    });
+
+    // "Hand over the phone" in the section above starts the demo once it is in view.
+    // On a phone the section top is a screen above the demo, so bring the phone
+    // itself to the middle of the screen (the plain #try link still works without JS).
+    document.querySelectorAll<HTMLElement>('[data-handover]').forEach((a) =>
+      a.addEventListener('click', (e) => {
+        e.preventDefault();
+        phone.scrollIntoView({ behavior: reduced() ? 'auto' : 'smooth', block: 'center' });
+        history.replaceState(null, '', '#try');
+        if (current !== 'start') return;
+        setTimeout(() => !busy && current === 'start' && handover(), reduced() ? 0 : 700);
+      }),
+    );
+  });
+</script>

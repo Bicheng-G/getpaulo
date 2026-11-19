@@ -31,3 +31,11 @@ photo or audio assets. Preserve the upstream notices below with this artifact.
 License texts were retrieved from these upstream locations on 2026-10-29. Font
 family names come from the embedded CSS; the original export does not record an
 exact font revision. The font license snapshots do not establish binary provenance.
+
+## Shipped on the website
+
+| Component | Where | Source | License |
+|---|---|---|---|
+| Fraunces (variable, Latin subset) | `public/fonts/fraunces-vf.woff2` | Paulo app bundle, `PauloApp/Paulo/Resources/Fraunces-VF.ttf` | [SIL OFL](licenses/fraunces-OFL.txt) |
+| Film sound effects | `public/media/paulo-film.mp4` | Freesound: “whoosh.soft.wav” by junggle (CC BY 4.0), “Whoosh Simpler” by original_sound (CC BY 3.0), “BUBBLE POP .wav” by Ch0cchi (CC BY 3.0), “Bubble pop” by daalvinz (CC BY 4.0) | CC BY; credited under the film in `src/components/FilmDialog.astro` |
+| Film music | `public/media/paulo-film.mp4` | Generated with Lyria for the App Store preview | — |

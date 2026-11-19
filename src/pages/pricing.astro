@@ -1,0 +1,296 @@
+---
+import { Image } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import Faq from '../components/Faq.astro';
+import CtaBand from '../components/CtaBand.astro';
+import scene from '../assets/clay/IntroSyncTogether.jpg';
+import jar from '../assets/clay/MomentSaveJar.png';
+import clock from '../assets/clay/MyWeekAlarmClock.png';
+
+const free = [
+  'Wishes from your own photos, cut out as stickers',
+  'Stars, the path and every Choice Moment',
+  'My Week tickets and on-screen timers',
+  'My Trail, keepsakes and wish stories',
+  'Any number of children',
+  'Your own private iCloud backup and restore',
+  'Export and erase, always',
+];
+
+const family = [
+  { title: 'Sync with another caregiver', body: 'A promise one grown-up makes shows on the other’s phone too.' },
+  { title: 'An alarm when a timed turn ends', body: 'A real iOS alarm, so the agreement says “time’s up”, not a tired grown-up.' },
+  { title: 'A reminder on wish day', body: 'On the day you promised, a gentle nudge for the grown-up. Never a price or an offer.' },
+];
+
+const faqs = [
+  {
+    q: 'Will my child ever see a paywall?',
+    a: '<p>No. Nothing a child uses is ever locked, and a child’s screens never show a price, an offer or an expiry date.</p>',
+  },
+  {
+    q: 'How much does Paulo Family cost?',
+    a: '<p>The App Store shows the price in your own currency before you buy. You can choose yearly (with a 14-day free trial for new subscribers), monthly, or a single payment for lifetime.</p>',
+  },
+  {
+    q: 'What happens if I cancel?',
+    a: '<p>Everything your family made stays: wishes, stars, keepsakes, My Trail. Sharing with the other caregiver pauses, and nobody is removed from the family. Paulo keeps working on your phone.</p>',
+  },
+  {
+    q: 'Does one purchase cover both parents?',
+    a: '<p>Yes. Paulo Family works with Apple’s Family Sharing, so one purchase covers the household.</p>',
+  },
+  {
+    q: 'How do I cancel a subscription?',
+    a: '<p>On your iPhone open Settings, tap your name, then Subscriptions. Subscriptions renew automatically unless cancelled at least 24 hours before the period ends.</p>',
+  },
+];
+---
+
+<BaseLayout
+  title="Pricing"
+  description="Everything children use in Paulo is free, forever. Paulo Family is an optional subscription or lifetime purchase for grown-ups: sync with another caregiver, a turn-end alarm and a wish-day reminder."
+>
+  <PageHero eyebrow="Pricing" id="pricing-title">
+    <Fragment slot="title">Free for children. <span class="accent">Forever.</span></Fragment>
+    <Fragment slot="lede">
+      <p>
+        That’s a rule we wrote down before we wrote a price: nothing a child needs is ever locked. Paulo
+        Family adds three helpers for the grown-ups, if you want them.
+      </p>
+    </Fragment>
+    <div slot="art" class="price-art">
+      <Image src={scene} alt="Clay scene: a child and a grown-up look at the same wish on two phones." widths={[400, 700]} sizes="(max-width: 900px) 90vw, 440px" loading="eager" />
+    </div>
+  </PageHero>
+
+  <section class="plans section-pad" aria-label="Plans">
+    <div class="wrap plans-grid">
+      <article class="plan plan-free">
+        <div class="plan-head">
+          <div class="plan-art" data-poke tabindex="0" role="img" aria-label="A clay jar of stars">
+            <Image src={jar} alt="" width={160} />
+          </div>
+          <div>
+            <h2 class="title">Paulo</h2>
+            <p class="plan-price serif">Free</p>
+            <p class="plan-sub">Everything for your children, forever</p>
+          </div>
+        </div>
+        <ul class="plan-list">
+          {free.map((f) => <li>{f}</li>)}
+        </ul>
+      </article>
+
+      <article class="plan plan-family">
+        <div class="plan-head">
+          <div class="plan-art" data-poke tabindex="0" role="img" aria-label="A clay alarm clock">
+            <Image src={clock} alt="" width={160} />
+          </div>
+          <div>
+            <h2 class="title">Paulo Family</h2>
+            <p class="plan-price serif">For grown-ups</p>
+            <p class="plan-sub">Yearly with a 14-day free trial, monthly, or lifetime</p>
+          </div>
+        </div>
+        <ul class="plan-features">
+          {
+            family.map((f) => (
+              <li>
+                <h3>{f.title}</h3>
+                <p>{f.body}</p>
+              </li>
+            ))
+          }
+        </ul>
+        <p class="plan-foot">
+          Prices are shown in your currency on the App Store. One purchase covers your household
+          through Family Sharing. Cancel any time; everything you made stays.
+        </p>
+      </article>
+    </div>
+  </section>
+
+  <section class="price-faq section-pad" aria-labelledby="price-faq-title">
+    <div class="wrap price-faq-inner">
+      <h2 id="price-faq-title" class="headline">Questions about <span class="accent">money</span></h2>
+      <Faq items={faqs} />
+    </div>
+  </section>
+
+  <CtaBand />
+</BaseLayout>
+
+<style>
+  .price-art {
+    width: min(100%, 440px);
+    border-radius: var(--radius-keepsake);
+    overflow: hidden;
+    rotate: 2deg;
+    box-shadow: 0 20px 50px rgb(32 48 60 / 0.16);
+  }
+
+  .price-art :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .plans {
+    padding-top: 0;
+  }
+
+  .plans-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: clamp(16px, 2.5vw, 28px);
+    align-items: stretch;
+  }
+
+  .plan {
+    display: flex;
+    flex-direction: column;
+    padding: clamp(24px, 3.4vw, 44px);
+    border-radius: var(--radius-sheet);
+    background: var(--color-card);
+    box-shadow:
+      0 1px 2px rgb(32 48 60 / 0.04),
+      0 10px 30px rgb(32 48 60 / 0.06);
+  }
+
+  .plan-family {
+    background: var(--color-wins-deep);
+    color: var(--color-cta-label);
+  }
+
+  /* Phones: the clay object sits above the title so the title keeps the full
+     card width; side by side from 600px. */
+  .plan-head {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+  }
+
+  .plan-art {
+    width: 80px;
+    flex-shrink: 0;
+  }
+
+  @media (min-width: 600px) {
+    .plan-head {
+      flex-direction: row;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .plan-art {
+      width: 96px;
+    }
+  }
+
+  .plan-art :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .plan-price {
+    margin-top: 4px;
+    font-size: clamp(2.2rem, 4vw, 3rem);
+    line-height: 1;
+    font-weight: 600;
+    color: var(--color-cta);
+  }
+
+  .plan-family .plan-price {
+    color: var(--color-star);
+  }
+
+  .plan-sub {
+    margin-top: 8px;
+    font-weight: 700;
+    color: var(--color-ink-soft);
+  }
+
+  .plan-family .plan-sub {
+    color: rgb(255 244 230 / 0.65);
+  }
+
+  .plan-list {
+    display: grid;
+    gap: 12px;
+    margin-top: 32px;
+  }
+
+  .plan-list li {
+    display: flex;
+    gap: 12px;
+    font-weight: 600;
+  }
+
+  .plan-list li::before {
+    content: '';
+    flex-shrink: 0;
+    width: 22px;
+    height: 22px;
+    margin-top: 1px;
+    border-radius: 99px;
+    background:
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M4.5 8.3l2.2 2.2 4.8-5' fill='none' stroke='%23fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")
+        center / 100% no-repeat,
+      var(--color-sage);
+  }
+
+  .plan-features {
+    display: grid;
+    gap: 14px;
+    margin-top: 32px;
+  }
+
+  .plan-features li {
+    padding: 18px 20px;
+    border-radius: 20px;
+    background: rgb(255 244 230 / 0.07);
+    box-shadow: inset 0 0 0 1px rgb(255 244 230 / 0.08);
+  }
+
+  .plan-features h3 {
+    font-size: 19px;
+  }
+
+  .plan-features p {
+    margin-top: 4px;
+    font-size: 15.5px;
+    color: rgb(255 244 230 / 0.7);
+  }
+
+  .plan-foot {
+    margin-top: auto;
+    padding-top: 24px;
+    font-size: 14.5px;
+    color: rgb(255 244 230 / 0.6);
+  }
+
+  .price-faq {
+    padding-top: 0;
+  }
+
+  .price-faq-inner {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: clamp(24px, 5vw, 72px);
+    align-items: start;
+  }
+
+  @media (min-width: 900px) {
+    .plans-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .price-faq-inner {
+      grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+    }
+  }
+</style>
