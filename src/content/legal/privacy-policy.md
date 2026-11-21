@@ -1,7 +1,7 @@
 ---
 title: Privacy Policy
 description: Paulo has no advertising, no analytics, no third-party tracking, no Paulo account, and no Paulo server. Family data stays in a local replica on the device, mirrored through the parent's own private iCloud account.
-lastUpdated: 2026-11-17
+lastUpdated: 2026-11-22
 ---
 
 Paulo is a child-first, parent-assisted app that helps a family practise delayed gratification
@@ -72,12 +72,17 @@ An owned family space uses the current Apple Account's **private** CloudKit data
 formal save. Personal iCloud mirroring across that parent's own devices, and recovery after a
 reinstall, are not paid features.
 
-A second caregiver is invited through Apple's own sharing sheet, which creates a CloudKit share
-(`CKShare`). An accepted participant receives and edits the same family data through Apple's shared
-CloudKit database. The inviting Apple Account remains the technical owner and holds management powers
-a participant does not: only the owner can invite, remove a participant, or stop sharing. A
-participant can leave. All of these run through Apple's sharing interface, and Paulo neither stores
-nor transmits the other caregiver's Apple Account identity itself.
+Another caregiver is invited with a one-time CloudKit share link (`CKShare`) that Paulo creates on
+the owner's device and hands to Apple's standard share sheet (on iOS 17, through Apple's iCloud
+sharing sheet). Each link lets one person join and nobody else after them; cancelling without
+sending withdraws the unused link. Optionally, two grown-ups in the same room can pass the same
+one-time invitation link face to face over the local network (Bonjour); Paulo looks for a nearby
+iPhone only while the grown-up is actively on the *Invite in person* or *Join a phone nearby*
+screen, and nothing passes through a Paulo server. An accepted participant receives and edits the
+same family data through Apple's shared CloudKit database. The inviting Apple Account remains the
+technical owner and holds management powers a participant does not: only the owner can invite,
+remove a participant, or stop sharing (through Apple's Manage Sharing interface). A participant can
+leave. Paulo neither stores nor transmits the other caregiver's Apple Account identity itself.
 
 Accepting an invitation does not move the family to a different database, and does not give either
 caregiver access to anything outside that one family space.
