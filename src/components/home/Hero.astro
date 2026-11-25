@@ -3,7 +3,6 @@ import { Image } from 'astro:assets';
 import Phone from '../Phone.astro';
 import GetPaulo from '../GetPaulo.astro';
 import FilmButton from '../FilmButton.astro';
-import homeScreen from '../../assets/screens/home.png';
 import rideOn from '../../assets/clay/TemptationRideOn.png';
 import claw from '../../assets/clay/TemptationClawMachine.png';
 import jar from '../../assets/clay/MomentSaveJar.png';
@@ -28,20 +27,46 @@ import elephant from '../../assets/toys/elephant.png';
         <GetPaulo />
         <FilmButton tone="ghost" />
       </div>
-      <ul class="hero-facts" data-enter style="--i:4">
-        <li>Free for children, forever</li>
-        <li>No ads</li>
-        <li>No tracking</li>
-      </ul>
+      <div class="hero-trust" data-enter style="--i:4">
+        <p class="hero-promise">Everything for your children is free. Forever.</p>
+        <ul class="hero-facts">
+          <li>No account.</li>
+          <li>No tracking.</li>
+          <li>Private iCloud.</li>
+        </ul>
+      </div>
     </div>
 
     <div class="hero-stage">
       <div class="stage-glow" aria-hidden="true"></div>
 
-      <div class="hero-phone" data-enter style="--i:2">
-        <Phone label="Paulo's Home screen: a toy taxi wish, one more star to go." style="--w: var(--phone-w)">
-          <Image src={homeScreen} alt="" widths={[300, 600]} sizes="300px" loading="eager" fetchpriority="high" />
-        </Phone>
+      <div class="hero-phone-col" data-enter style="--i:2">
+        <div class="hero-phone">
+          <Phone label="15-second demo of Paulo: cutting out a wish sticker, choosing between two equal buttons, and tearing off a weekly ticket." style="--w: var(--phone-w)">
+            <video
+              class="hero-video"
+              data-hero-reel
+              autoplay
+              muted
+              loop
+              playsinline
+              preload="metadata"
+              poster="/media/hero-reel-poster.jpg"
+              width="480"
+              height="982"
+            >
+              <source src="/media/hero-reel.mp4" type="video/mp4" />
+            </video>
+          </Phone>
+        </div>
+
+        <div class="hero-beats" role="group" aria-label="Demo moments">
+          <button type="button" class="hero-beat is-active" data-beat="0" data-seek="0">Wish sticker</button>
+          <span class="hero-beat-sep" aria-hidden="true">·</span>
+          <button type="button" class="hero-beat" data-beat="1" data-seek="5.1">Two equal choices</button>
+          <span class="hero-beat-sep" aria-hidden="true">·</span>
+          <button type="button" class="hero-beat" data-beat="2" data-seek="10.2">Weekly tickets</button>
+        </div>
       </div>
 
       <div class="clay c-ride" data-enter="pop" style="--i:7; --r:12deg">
@@ -144,12 +169,39 @@ import elephant from '../../assets/toys/elephant.png';
     margin-top: 24px;
   }
 
+  .hero-trust {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 20px;
+  }
+
+  .hero-promise {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 15.5px;
+    font-weight: 800;
+    color: var(--color-ink);
+  }
+
+  .hero-promise::before {
+    content: '';
+    flex: none;
+    width: 17px;
+    height: 17px;
+    border-radius: 99px;
+    background:
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M4.5 8.3l2.2 2.2 4.8-5' fill='none' stroke='%23fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")
+        center / 100% no-repeat,
+      var(--color-sage);
+  }
+
   .hero-facts {
     display: flex;
     flex-wrap: wrap;
-    gap: 6px 20px;
-    margin-top: 18px;
-    font-size: 15px;
+    gap: 4px 14px;
+    font-size: 14.5px;
     font-weight: 700;
     color: var(--color-ink-soft);
   }
@@ -157,18 +209,12 @@ import elephant from '../../assets/toys/elephant.png';
   .hero-facts li {
     display: inline-flex;
     align-items: center;
-    gap: 8px;
+    gap: 14px;
   }
 
-  .hero-facts li::before {
-    content: '';
-    width: 16px;
-    height: 16px;
-    border-radius: 99px;
-    background:
-      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M4.5 8.3l2.2 2.2 4.8-5' fill='none' stroke='%23fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")
-        center / 100% no-repeat,
-      var(--color-sage);
+  .hero-facts li + li::before {
+    content: '·';
+    opacity: 0.45;
   }
 
   /* ---------- The stage ---------- */
@@ -194,10 +240,63 @@ import elephant from '../../assets/toys/elephant.png';
     );
   }
 
-  .hero-phone {
+  .hero-phone-col {
     position: relative;
     z-index: 1;
-    rotate: 3deg;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .hero-phone {
+    position: relative;
+    rotate: 2.5deg;
+  }
+
+  .hero-beats {
+    position: relative;
+    z-index: 3;
+    display: inline-flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 4px 6px;
+    padding: 6px 14px;
+    border-radius: 999px;
+    background: rgb(255 255 255 / 0.84);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    box-shadow:
+      0 1px 2px rgb(32 48 60 / 0.06),
+      0 6px 16px rgb(32 48 60 / 0.08);
+    font-size: 12.5px;
+    font-weight: 700;
+    color: var(--color-ink-soft);
+  }
+
+  .hero-beat {
+    padding: 2px 6px;
+    border: 0;
+    border-radius: 999px;
+    background: none;
+    color: inherit;
+    font: inherit;
+    cursor: pointer;
+    transition: color 200ms ease, background-color 200ms ease;
+  }
+
+  .hero-beat:hover {
+    color: var(--color-ink);
+  }
+
+  .hero-beat.is-active {
+    color: var(--color-ink);
+    background: rgb(203 104 66 / 0.14);
+  }
+
+  .hero-beat-sep {
+    opacity: 0.35;
   }
 
   .clay {
@@ -354,9 +453,8 @@ import elephant from '../../assets/toys/elephant.png';
       margin-top: 38px;
     }
 
-    .hero-facts {
-      gap: 8px 22px;
-      margin-top: 30px;
+    .hero-trust {
+      margin-top: 28px;
     }
 
     .hero-stage {
@@ -376,3 +474,50 @@ import elephant from '../../assets/toys/elephant.png';
     }
   }
 </style>
+
+<script>
+  import { reduced } from '../../scripts/motion';
+
+  const video = document.querySelector<HTMLVideoElement>('[data-hero-reel]');
+  const beats = [...document.querySelectorAll<HTMLButtonElement>('[data-beat]')];
+
+  if (video) {
+    const setActive = (idx: number) => {
+      beats.forEach((b, i) => b.classList.toggle('is-active', i === idx));
+    };
+
+    if (reduced()) {
+      video.pause();
+      video.removeAttribute('autoplay');
+      setActive(1);
+    } else if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((e) => {
+            if (e.isIntersecting) {
+              video.play().catch(() => {});
+            } else {
+              video.pause();
+            }
+          });
+        },
+        { threshold: 0.25 },
+      );
+      io.observe(video);
+    }
+
+    video.addEventListener('timeupdate', () => {
+      const t = video.currentTime;
+      setActive(t < 4.9 ? 0 : t < 10.0 ? 1 : 2);
+    });
+
+    beats.forEach((btn, i) => {
+      btn.addEventListener('click', () => {
+        const seek = Number(btn.dataset.seek ?? 0);
+        video.currentTime = seek;
+        setActive(i);
+        if (!reduced()) video.play().catch(() => {});
+      });
+    });
+  }
+</script>

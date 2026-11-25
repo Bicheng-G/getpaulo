@@ -12,13 +12,10 @@ export const SITE = {
 } as const;
 
 /**
- * Apple's numeric app ID, available once the app record exists in App Store
- * Connect. Setting it turns on the App Store link and the iOS Smart App Banner.
- *
- * Until then the site says "coming soon" rather than linking to a dead page —
- * Apple checks this domain during review.
+ * Apple's numeric app ID. Setting it turns on the App Store link and the iOS
+ * Smart App Banner across the site.
  */
-export const APP_STORE_ID: string | null = null;
+export const APP_STORE_ID: string | null = '6797490684';
 
 /**
  * `ct` is Apple's App Analytics campaign parameter. It attributes the click
